@@ -96,15 +96,34 @@ Qwen3.5-2B, 8-bit, on this machine (M-series, 16 GB), JevBench public items:
 | reflex, published, 2B bf16 | 1.000 | — | 0.468 |
 | Jev 1.13.0 (commercial) | 1.000 | 0.986 | 0.730 |
 
-Cost of running it:
+Speed against Jev, same client and items, only the URL different (M2 Pro,
+`rev serve` with defaults, 2026-09-21):
 
-| | weights | peak | short question | 2.8k-token question |
-|---|---:|---:|---:|---:|
-| 2B, 8-bit *(default)* | 1.86 GB | 4.36 GB | 275 ms | 3.7 s |
-| 2B, 4-bit | 0.99 GB | 3.49 GB | 285 ms | 3.8 s |
-| 4B, 4-bit | 2.20 GB | 5.00 GB | 611 ms | 8.6 s |
+| request | rev p50 / p95 | Jev p50 / p95 |
+|---|---:|---:|
+| short: clipboard paste, ~230 tokens | **266 / 473 ms** | 354 / 423 ms |
+| medium: JevBench standard, ~160 tokens | **240 / 423 ms** | 356 / 396 ms |
+| long: JevBench hard, 1-4k tokens | 821 / 3666 ms | **326 / 437 ms** |
+| long, three questions in one request | 1280 / 3862 ms | **328 / 388 ms** |
+| 8 requests in flight at once | 0.7-3.9 per s | **21-24 per s** |
 
-**Use 8-bit.** It costs 0.87 GB and no time, and buys nine points.
+Short and medium questions are faster than Jev. Long documents are not and
+cannot be on this laptop: reading 3,300 tokens is about 13 TFLOP, two to three
+seconds on an M2 Pro whatever the code does, where Jev runs on datacenter GPUs.
+What `rev` does instead is read a state once: a second reading or another
+question on the same document costs about 150 ms, not another full read. Nor
+does it parallelise: one laptop GPU runs one forward pass at a time.
+
+Memory: 1.86 GB of weights at 8-bit, 3.2 GB peak on a 3,300-token prompt.
+
+| | weights | short question | 3.3k-token question |
+|---|---:|---:|---:|
+| 2B, 8-bit *(default)* | 1.86 GB | 262 ms | 3.4 s |
+| 2B, bf16 | 4.3 GB | 212 ms | 2.6 s |
+| 2B, 4-bit | 0.99 GB | 266 ms | 3.5 s |
+
+**Use 8-bit.** 4-bit saves 0.87 GB, no time, and costs nine points on hard;
+bf16 is 20% faster for 2.4 GB more and gives the same answers.
 
 The tasks this was built for, written the way a user would write them
 (`Rev()` defaults, real calendar, 8-bit):
@@ -116,7 +135,16 @@ The tasks this was built for, written the way a user would write them
 | write-action gate: classify the action, decide risk in code, plus `vague_action` | 57 | **0.965** | 75% / 1.000 |
 
 Jev scored 1.000 on the first two. Every miss in the gate was a safe request
-sent for confirmation, never the other way. Latency: 300–470 ms median.
+sent for confirmation, never the other way. Latency: 225-330 ms median.
+
+Email triage on 146 real messages from this inbox (19 important, labelled
+before the model ran): asking "what kind of email is this?" over seven
+categories and ranking by the action, personal and account probabilities gave
+**AUC 0.941** (95% interval 0.89-0.98), with 18 of the 19 in the top 18%. A
+sender regex scored 0.375, because the important mail comes from noreply
+addresses as often as the junk does. Use `orders="one"` for ranking like this:
+the second reading did not help (0.927-0.936, inside the interval) and doubled
+the time.
 
 ## Gating
 
@@ -155,8 +183,9 @@ answers below it, the ones a person sees, are more often right.
 - **Open-ended cleanups read as harmless.** "Tidy up my calendar" was classified
   as a local note edit at p = 0.99, in English and Chinese. Route them to a
   person before asking the model: `rev.guards.vague_action(request)`.
-- Long inputs are slow and memory-hungry: a 2.8k-token question costs 3.7 s and
-  most of the peak above.
+- Long inputs are slow: a 3.3k-token question costs about 3.4 s the first time
+  its document is read. Ask everything you need about a document in one
+  request, so it is read once.
 - Two of 111 hard items sit close enough that a last-bit difference decides
   them. `rev` answers each question the same way wherever it sits in a batch
   (`tests/test_determinism.py`); the reference implementation's CLI does not,

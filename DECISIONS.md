@@ -138,3 +138,38 @@ Two failures were confident, not uncertain, so no threshold catches them: a key
 classified as an email address at p = 1.00, and "tidy up my calendar" as a local
 edit at p = 0.99. `rev.guards` checks for both before the model is asked. They
 are deliberately broad because a false alarm costs one confirmation.
+
+## Read the answer position, and each state, once — 2026-09-21
+
+Against Jev on the same client and items, short and medium questions were
+already level, but long documents took 0.9 s median and 4.5 s at p95 against
+Jev's flat 330 ms. Profiled on an M2 Pro:
+
+- **The vocabulary projection ran over every position** to read the last one:
+  3,300 x 248k logits per long prompt. Applying the head to the last position
+  alone: -24% latency, peak 4.69 -> 3.16 GB, same answer on all 223 items.
+- **Every reading re-read its state.** The evidence comes first in the prompt,
+  so all readings of one state share a token prefix. It is prefilled once and
+  the cache restored for each reading; the chat template is one more cached
+  level below it. A second reading of a long document: 670 -> 150 ms.
+- The rest is arithmetic. 8-bit dequantisation is ~20% (bf16: 262 -> 212 ms
+  but 2.4 GB more, not taken). Qwen3.5's linear-attention layers run a
+  sequential per-token recurrence in MLX, ~22%; a chunked kernel could win part
+  of that back and has not been written. A 3,300-token first read cannot get
+  near Jev's 330 ms on this hardware.
+
+Computing in pieces moves bf16 rounding: up to 0.6 in a logit, 3 of 111 hard
+answers flipped each way on near-ties (hard 0.550 -> 0.568, standard
+unchanged, the user's three tasks identical). The split point is found from
+the state alone, so an answer is still the same whatever else is asked and
+whether its prefix was cached (drift 0). SemIf equivalence is still checked
+exactly on the full-forward path.
+
+## Ranking tasks read once — 2026-09-21
+
+On email triage (146 real messages, 19 important, ranked by summed category
+probability) the second reading did not help: AUC 0.941 one reading, 0.927
+auto, 0.936 always two, all inside one bootstrap interval, at twice the time.
+Position bias shows up when the answer is one item among look-alikes; a
+fixed list of distinct categories has no look-alikes to confuse. The default
+stays `auto`; the README says to pass `orders="one"` for ranking.
