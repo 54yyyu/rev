@@ -82,9 +82,15 @@ def ece(probabilities: Sequence[dict[str, float]], gold: Sequence[str], bins: in
 
 
 def coverage_curve(probabilities: Sequence[dict[str, float]], gold: Sequence[str],
-                   thresholds: Iterable[float] = (0.0, 0.3, 0.5, 0.7, 0.8, 0.9, 0.95)):
-    """(threshold, coverage, selective accuracy) - what a gate would actually buy."""
-    conf = np.array([max(r.values()) for r in probabilities])
+                   thresholds: Iterable[float] = (0.0, 0.3, 0.5, 0.7, 0.8, 0.9, 0.95),
+                   confidences: Sequence[float] | None = None):
+    """(threshold, coverage, selective accuracy) - what a gate would actually buy.
+
+    Pass each `Decision.confidence` as `confidences`: after a second reading it
+    is lower than the top probability, and it is what a gate should use.
+    """
+    conf = np.array(confidences if confidences is not None
+                    else [max(r.values()) for r in probabilities])
     hit = np.array([max(r, key=r.get) == g for r, g in zip(probabilities, gold)], dtype=float)
     out = []
     for t in thresholds:

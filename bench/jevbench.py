@@ -48,11 +48,12 @@ def main() -> int:
 
     rows = fetch(a.tier)
     h = Rev(a.model, bits=a.bits)
-    probs, gold, by_family = [], [], {}
+    probs, confs, gold, by_family = [], [], [], {}
     for r in rows:
         state = r["state"] if isinstance(r["state"], str) else json.dumps(r["state"], ensure_ascii=False)
-        d = h.decide(state, r["question"]["instructions"], options_of(r), orders=a.orders)
-        probs.append(d.probabilities); gold.append(str(r["expected"]))
+        d = h.decide(state, r["question"]["instructions"], options_of(r), orders=a.orders,
+                     ordered=r["question"]["type"] == "score")
+        probs.append(d.probabilities); confs.append(d.confidence); gold.append(str(r["expected"]))
         by_family.setdefault(r["family"], []).append(d.choice == str(r["expected"]))
 
     hit = [max(p, key=p.get) == g for p, g in zip(probs, gold)]
@@ -63,7 +64,7 @@ def main() -> int:
     for fam, v in sorted(by_family.items()):
         print(f"    {fam:18s} {len(v):3d}  {np.mean(v):.3f}")
     print("  gate (threshold / coverage / selective accuracy):")
-    for t, cov, sel in coverage_curve(probs, gold):
+    for t, cov, sel in coverage_curve(probs, gold, confidences=confs):
         print(f"    {t:4.2f}  {cov:5.2f}  {sel:.3f}")
     return 0
 
