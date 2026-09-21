@@ -159,7 +159,7 @@ Jev's flat 330 ms. Profiled on an M2 Pro:
   near Jev's 330 ms on this hardware.
 
 Computing in pieces moves bf16 rounding: up to 0.6 in a logit, 3 of 111 hard
-answers flipped each way on near-ties (hard 0.550 -> 0.568, standard
+answers flipped, all near-ties (hard 0.550 -> 0.568, standard
 unchanged, the user's three tasks identical). The split point is found from
 the state alone, so an answer is still the same whatever else is asked and
 whether its prefix was cached (drift 0). SemIf equivalence is still checked
