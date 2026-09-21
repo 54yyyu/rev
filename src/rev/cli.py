@@ -22,8 +22,9 @@ def score(argv=None) -> int:
                    help="in-memory quantization; 0 keeps the checkpoint precision (default: 8)")
     p.add_argument("--input", required=True, type=Path)
     p.add_argument("--output", required=True, type=Path)
-    p.add_argument("--both-orders", action="store_true",
-                   help="average two option orders; measured to help binary questions only")
+    p.add_argument("--orders", default="auto", choices=("one", "two", "auto"),
+                   help="read the options a second time in reverse: never, always, or only "
+                        "when the first pass is unsure (default: auto)")
     p.add_argument("--offsets", type=Path, help="JSON map of option id to logit shift")
     p.add_argument("--temperature", type=float, default=1.0)
     p.add_argument("--max-tokens", type=int, default=8192)
@@ -46,7 +47,7 @@ def score(argv=None) -> int:
     with a.output.open("w") as fh:
         for i, row in enumerate(rows):
             d = h.decide(row["state"], row["question"], row["options"],
-                         both_orders=a.both_orders)
+                         orders=a.orders)
             fh.write(json.dumps({
                 "id": row["id"], "choice": d.choice, "probabilities": d.probabilities,
                 "logits": d.logits, "confidence": d.confidence,
@@ -66,5 +67,13 @@ def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv and argv[0] == "score":
         return score(argv[1:])
-    print("usage: rev score --input FILE --output FILE [--model M] [--bits 8]", file=sys.stderr)
+    if argv and argv[0] == "serve":
+        from .serve import serve
+        return serve(argv[1:])
+    print("usage: rev serve [--port 8421] [--model M] [--bits 8]\n"
+          "       rev score --input FILE --output FILE [--model M] [--bits 8]", file=sys.stderr)
     return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
