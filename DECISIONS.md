@@ -173,3 +173,22 @@ auto, 0.936 always two, all inside one bootstrap interval, at twice the time.
 Position bias shows up when the answer is one item among look-alikes; a
 fixed list of distinct categories has no look-alikes to confuse. The default
 stays `auto`; the README says to pass `orders="one"` for ranking.
+
+## Qwen3.5-2B, not 4B or Ling-3.0-tiny — 2026-09-21
+
+Measured at 4-bit with two option orders available, before the numerics were
+pinned (so compare rows, not against later tables):
+
+| | weights | peak | short / 2.8k-token | easy (one / two orders) | hard (one / two) |
+|---|---:|---:|---:|---:|---:|
+| Qwen3.5-2B | 0.99 GB | 3.49 GB | 285 / 3779 ms | 0.979 / 1.000 | 0.450 / 0.387 |
+| Qwen3.5-4B | 2.20 GB | 5.00 GB | 611 / 8616 ms | 1.000 / 1.000 | 0.595 / 0.577 |
+| Ling-3.0-tiny (MoE, 7.9B total) | 4.14 GB | 6.29 GB | 675 / 3876 ms | 0.812 / 0.958 | 0.369 / 0.387 |
+
+Ling loses on all three: every expert stays resident, so "tiny" is the active
+size and not the footprint, and its reasoning-benchmark lead says nothing about
+a single next-token readout with thinking off. Its easy score jumping with
+order averaging marks a strong position bias. 4B buys 14.5 points on hard,
+which is long multi-hop documents; on the user's own tasks 2B was already at
+0.97-1.00 and 4B at 1.00, for 2.1x the latency and 1.4x the peak on a machine
+already in swap. The 4B and Ling weights were deleted.
