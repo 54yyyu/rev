@@ -1,0 +1,16 @@
+[project]
+name = "hinge"
+version = "0.1.0"
+description = "Typed decisions from a frozen open model, one forward pass, on Apple Silicon"
+requires-python = ">=3.10"
+dependencies = ["mlx>=0.29", "mlx-lm>=0.28", "numpy>=1.26", "huggingface-hub>=0.28"]
+
+[project.scripts]
+hinge = "hinge.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hinge"]
