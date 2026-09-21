@@ -19,7 +19,7 @@ r = Rev("Qwen/Qwen3.5-2B", bits=8)
 
 def ask(row):
     state = row["state"] if isinstance(row["state"], str) else json.dumps(row["state"], ensure_ascii=False)
-    return r.decide(state, row["question"]["instructions"], options_of(row)).logits
+    return r.decide(state, row["question"]["instructions"], options_of(row), orders="one").logits
 
 
 first = ask(target)

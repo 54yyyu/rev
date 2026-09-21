@@ -40,7 +40,7 @@ if d3.choice != "x7":
     print("  FAIL: expected x7"); fail += 1
 
 d4 = h.decide("The build failed with exit code 1.", "Did the build succeed?",
-              {"no": "It did not succeed", "yes": "It succeeded"}, both_orders=True)
+              {"no": "It did not succeed", "yes": "It succeeded"}, orders="two")
 print(f"both orders: {d4.choice} p={d4.confidence:.3f} disagreement={d4.disagreement:.3f}")
 if d4.choice != "no":
     print("  FAIL: expected no"); fail += 1

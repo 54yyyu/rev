@@ -40,7 +40,7 @@ def main() -> int:
     p.add_argument("--tier", default="hard", choices=("easy", "standard", "hard"))
     p.add_argument("--model", default="Qwen/Qwen3.5-2B")
     p.add_argument("--bits", type=int, default=8)
-    p.add_argument("--both-orders", action="store_true")
+    p.add_argument("--orders", default="auto", choices=("one", "two", "auto"))
     a = p.parse_args()
 
     from rev import Rev
@@ -51,13 +51,13 @@ def main() -> int:
     probs, gold, by_family = [], [], {}
     for r in rows:
         state = r["state"] if isinstance(r["state"], str) else json.dumps(r["state"], ensure_ascii=False)
-        d = h.decide(state, r["question"]["instructions"], options_of(r), both_orders=a.both_orders)
+        d = h.decide(state, r["question"]["instructions"], options_of(r), orders=a.orders)
         probs.append(d.probabilities); gold.append(str(r["expected"]))
         by_family.setdefault(r["family"], []).append(d.choice == str(r["expected"]))
 
     hit = [max(p, key=p.get) == g for p, g in zip(probs, gold)]
     print(f"\n{a.tier}  n={len(rows)}  model={a.model} {a.bits}-bit"
-          f"{' two orders' if a.both_orders else ''}")
+          f" orders={a.orders}")
     print(f"  accuracy {np.mean(hit):.3f}   ECE {ece(probs, gold):.3f}")
     print("  by family:")
     for fam, v in sorted(by_family.items()):

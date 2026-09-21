@@ -18,7 +18,7 @@ h.model, h.tokenizer, h.max_tokens, h.temperature, h.offsets, h._slots = model, 
 
 same, worst = 0, 0.0
 for r in rows:
-    ours = h.decide(r["state"], r["question"], r["options"])
+    ours = h.decide(r["state"], r["question"], r["options"], orders="one")   # the reference reads one order
     theirs = mlx_backend.score(model, tok, r, meta, max_tokens=8192)
     tp = dict(zip(theirs["option_ids"], theirs["probabilities"]))
     same += ours.choice == max(tp, key=tp.get)
