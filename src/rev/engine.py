@@ -40,6 +40,29 @@ def _aliased_copy(path: Path) -> Path:
 
 DEFAULT_CACHE_LIMIT_MIB = 256
 
+# Architectures whose logits are exactly head(backbone(x)) with nothing after
+# the head, so the head can be applied to the last position alone.
+LAST_POSITION_SAFE = {"qwen3_5", "qwen3_5_text", "qwen3", "qwen2", "llama"}
+
+
+def last_position_head(net):
+    """(backbone, head) when the output head can be applied to one position.
+
+    A full forward applies the vocabulary projection to every position: on a
+    3,000-token prompt that is 3,000 x 248k logits, about 1.5 GB and most of
+    the arithmetic, to read one row. Returns None for architectures not known
+    to be safe, which then take the full forward.
+    """
+    lm = getattr(net, "language_model", net)
+    body = getattr(lm, "model", None)
+    args = getattr(lm, "args", None)
+    if body is None or getattr(args, "model_type", None) not in LAST_POSITION_SAFE:
+        return None
+    if getattr(args, "tie_word_embeddings", False):
+        return body, body.embed_tokens.as_linear
+    head = getattr(lm, "lm_head", None)
+    return (body, head) if head is not None else None
+
 
 def load(model: str, bits: int | None = 8, group_size: int = 64,
          cache_limit_mib: int = DEFAULT_CACHE_LIMIT_MIB):
