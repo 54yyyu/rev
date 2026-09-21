@@ -134,6 +134,11 @@ The tasks this was built for, written the way a user would write them
 | pick a calendar event from a request, English and Chinese, 5–27 candidates | 216 | **0.986** | 71% / 0.987 |
 | write-action gate: classify the action, decide risk in code, plus `vague_action` | 57 | **0.965** | 75% / 1.000 |
 
+Read through pyapple instead, the same calendar has 97 events in a two-month
+window and the pick scores 0.953 on 192 items: lecture and recitation of one
+course ("lec" / "rec") are the usual confusion, and one wrong pick came at
+p = 0.98, so a write that follows a pick still needs confirming.
+
 Jev scored 1.000 on the first two. Every miss in the gate was a safe request
 sent for confirmation, never the other way. Latency: 225-330 ms median.
 
@@ -198,8 +203,23 @@ answers below it, the ones a person sees, are more often right.
 uv venv && uv pip install -e .
 rev serve                                            # the local endpoint
 rev score --input decisions.jsonl --output answers.jsonl
-python bench/jevbench.py --tier standard
 ```
+
+Measuring it:
+
+```bash
+uv pip install -e ".[bench]"
+python bench/usecases.py                  # clipboard, write-action gate, this Mac's calendar
+python bench/usecases.py mail --dump      # then label bench/private/mail_labels.json, then:
+python bench/usecases.py mail
+python bench/jevbench.py --tier hard      # public JevBench items
+python bench/speed.py && python bench/speed.py --jev
+python bench/orders.py                    # the reading-policy table, from saved logits
+```
+
+Calendar and mail are read through pyapple; personal data stays in
+`bench/private/`, which git ignores. `docs/BOUNDARY.md` is the lab notebook
+this grew out of.
 
 The first run downloads the 4.3 GB checkpoint from Hugging Face; after that a
 load takes about 4 s.
