@@ -1,0 +1,39 @@
+{
+ "date": "2026-09-21",
+ "target": "rev",
+ "setup": "rev serve, defaults (8-bit, orders=auto), commit cf5ac08, M2 Pro",
+ "results": {
+  "short: clipboard paste": {
+   "n": 40,
+   "p50_ms": 266,
+   "p95_ms": 473,
+   "mean_input_tokens": 234,
+   "sequential_per_s": 2.98,
+   "parallel8_per_s": 2.92
+  },
+  "medium: JevBench standard": {
+   "n": 72,
+   "p50_ms": 240,
+   "p95_ms": 423,
+   "mean_input_tokens": 160,
+   "sequential_per_s": 3.87,
+   "parallel8_per_s": 3.92
+  },
+  "long: JevBench hard": {
+   "n": 111,
+   "p50_ms": 821,
+   "p95_ms": 3666,
+   "mean_input_tokens": 1267,
+   "sequential_per_s": 0.7,
+   "parallel8_per_s": 0.71
+  },
+  "long: three questions per request": {
+   "n": 40,
+   "p50_ms": 1280,
+   "p95_ms": 3862,
+   "mean_input_tokens": 4039,
+   "sequential_per_s": 0.55,
+   "parallel8_per_s": 0.56
+  }
+ }
+}

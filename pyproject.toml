@@ -5,6 +5,11 @@ description = "Typed decisions from a frozen open model, one forward pass, on Ap
 requires-python = ">=3.10"
 dependencies = ["mlx>=0.29", "mlx-lm>=0.28", "numpy>=1.26", "huggingface-hub>=0.28"]
 
+[project.optional-dependencies]
+# bench/usecases.py reads this Mac's calendar and mail through pyapple, which is
+# found at ~/Documents/projects/pyapple-mcp; these are what its readers import.
+bench = ["pyobjc-framework-EventKit>=10.0", "pyobjc-framework-Cocoa>=10.0"]
+
 [project.scripts]
 rev = "rev.cli:main"
 

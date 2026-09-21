@@ -1,0 +1,39 @@
+{
+ "date": "2026-09-21",
+ "target": "jev",
+ "setup": "api.typesafe.ai, jev-1.13.0",
+ "results": {
+  "short: clipboard paste": {
+   "n": 40,
+   "p50_ms": 354,
+   "p95_ms": 423,
+   "mean_input_tokens": 458,
+   "sequential_per_s": 2.82,
+   "parallel8_per_s": 21.31
+  },
+  "medium: JevBench standard": {
+   "n": 72,
+   "p50_ms": 356,
+   "p95_ms": 396,
+   "mean_input_tokens": 368,
+   "sequential_per_s": 2.89,
+   "parallel8_per_s": 21.25
+  },
+  "long: JevBench hard": {
+   "n": 111,
+   "p50_ms": 326,
+   "p95_ms": 437,
+   "mean_input_tokens": 1483,
+   "sequential_per_s": 2.97,
+   "parallel8_per_s": 23.7
+  },
+  "long: three questions per request": {
+   "n": 40,
+   "p50_ms": 328,
+   "p95_ms": 388,
+   "mean_input_tokens": 1661,
+   "sequential_per_s": 3.04,
+   "parallel8_per_s": 22.04
+  }
+ }
+}

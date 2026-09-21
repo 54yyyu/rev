@@ -5,12 +5,12 @@ sys.path.insert(0, "/Users/yiyu/Documents/misc/semif/src")
 import numpy as np
 from rev import Rev
 
-items = Path("/Users/yiyu/Documents/misc/system-one-boundary/jb_items.jsonl")
-if not items.exists():
-    print("reference items not present; skipping"); sys.exit(0)
+items = Path(__file__).parent.parent / "bench/fixtures/semif_items.jsonl"   # 40 JevBench items, SemIf's shape
+if not Path("/Users/yiyu/Documents/misc/semif/src").exists():
+    print("SemIf checkout not present; skipping"); sys.exit(0)
 from semif_phase1 import mlx_backend
 
-rows = [json.loads(l) for l in items.read_text().splitlines()][:40]
+rows = [json.loads(l) for l in items.read_text().splitlines()]
 model, tok, meta = mlx_backend.load_model(
     "Qwen/Qwen3.5-2B", "15852e8c16360a2fea060d615a32b45270f8a8fc", bits=8)
 h = Rev.__new__(Rev)

@@ -3,3 +3,4 @@ __pycache__/
 *.egg-info/
 *.jsonl
 !bench/fixtures/*.jsonl
+bench/private/
