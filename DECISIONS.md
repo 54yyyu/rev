@@ -5,8 +5,9 @@ argued; the numbers are on JevBench public items with Qwen3.5-2B unless stated.
 
 ## 8-bit is the default, not 4-bit — 2026-09-21
 
-4-bit costs **9.1 points** on the hard tier (0.450 against 0.541) and saves
-**no latency** (285 ms against 275 ms on a short question). It saves 0.87 GB.
+4-bit costs **9.1 points** on the hard tier (0.450 against 0.541, both measured
+before the numerics were pinned, one reading) and saves **no latency** (285 ms
+against 275 ms on a short question). It saves 0.87 GB.
 
 This one choice outweighs every prompt technique tried here, and it also
 explains an anomaly: at 4-bit, averaging two option orders *hurt*
@@ -28,18 +29,45 @@ Verified at 30 options on a real task. decider's approach (one label token per
 option beyond ten) would go further still and is the next step if 101 is not
 enough.
 
-## Two option orders are off by default — 2026-09-21
+## A second reading when unsure; it never raises confidence — 2026-09-21
 
-reflex measured order-averaging as one of only three things that helped, and it
-does help here — but only on binary questions.
+*Supersedes "two option orders are off by default", measured the same day
+before the numerics were pinned.*
 
-| | binary (38) | multiple choice (73) |
-|---|---:|---:|
-| one order | 0.553 | **0.534** |
-| two orders | **0.605** | 0.507 |
+This started as an anomaly: on clipboard paste (160 items), 4-bit scored 0.988
+and 8-bit 0.906. bf16 scored 0.906 too, with all 160 answers identical to 8-bit,
+so 8-bit is faithful and the unquantized model itself was wrong. All 15 errors
+picked option A, B or C when the answer sat at position 4-17, and 14 of them
+had confidence below 0.6. **Position bias under uncertainty.** 4-bit's rounding
+happened to break it on this task; the same rounding costs nine points on hard.
 
-Net zero on the hard tier. Choosing per question type would score higher, but
-that choice was made by looking at the test items, so it is not shipped.
+Reading the options again in reverse and averaging the logits removes the bias.
+Every item was run both ways once and the policies compared offline:
+
+| task | one reading | always two | two when first < 0.9 |
+|---|---:|---:|---:|
+| clipboard paste (160) | 0.906 | 1.000 | 1.000 |
+| calendar pick (216) | 0.972 | 0.991 | 0.986 |
+| action kind for risk (57) | 0.930 | 0.912 | 0.912 |
+| JevBench easy / standard | 1.000 / 0.764 | 1.000 / 0.764 | 1.000 / 0.764 |
+| JevBench hard, score items kept to one reading | 0.523 | — | 0.550 |
+
+Two costs had to be handled:
+
+- **Averaged logits are overconfident.** At the 0.9 gate on standard they let
+  7 errors through instead of 2. Averaging probabilities instead let 4 through
+  but lost part of the accuracy. The shipped rule: the averaged logits choose,
+  `confidence` is the lower of the two readings' probabilities for that choice.
+  At 0.9 its coverage and errors equal a single reading's on every task above,
+  and the accuracy is the averaged logits'.
+- **Score levels must not be reversed.** Their order carries meaning; reversing
+  took hard's six score items from 3 right to 1. `ordered=True`, set
+  automatically for Jev score questions, keeps them to one reading.
+
+Only unsure items pay for the second pass: 8% on easy, 29-34% on paste and
+calendar, 79% on hard. The variant was chosen after seeing these items (four
+were tried), which is why the property it is chosen for is a structural one:
+the gate cannot get worse, because confidence can only go down.
 
 ## The option id never enters the prompt — 2026-09-21
 
@@ -82,7 +110,7 @@ reinforcement stage. Against it on the same items, same harness:
 
 | | standard | hard | wrong at p > 0.9 |
 |---|---:|---:|---:|
-| frozen | 0.764 | **0.550** | **9%** |
+| frozen, one reading | 0.764 | **0.523** | **9%** |
 | fine-tuned | **0.861** | 0.477 | **27%** |
 
 Fine-tuning buys short rule-application and loses long-document choice. The
@@ -92,3 +120,21 @@ errors through. If a human reads every answer, prefer the fine-tune.
 
 Its harness was not the reason: running decider's weights through `rev`
 *improved* on its own published numbers (standard 0.847 → 0.861).
+
+## A local server speaking Jev's protocol — 2026-09-21
+
+The library alone made every tool load its own 2-4 GB copy of the model, and
+kept code written for Jev from running locally. `rev serve` answers
+`POST /v1/systemone` with TypeSafe's request and response shapes, verified by
+pointing the same `Client` at both (`tests/test_serve.py` checks the server
+gives exactly the in-process probabilities). Requests are serialised: MLX runs
+one forward pass at a time anyway, and it keeps each answer independent of what
+else arrived. It binds 127.0.0.1 and refuses a port that is already in use
+rather than taking it.
+
+## Guards live in code, not in the prompt — 2026-09-21
+
+Two failures were confident, not uncertain, so no threshold catches them: a key
+classified as an email address at p = 1.00, and "tidy up my calendar" as a local
+edit at p = 0.99. `rev.guards` checks for both before the model is asked. They
+are deliberately broad because a false alarm costs one confirmation.

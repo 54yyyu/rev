@@ -1,6 +1,6 @@
 [project]
 name = "rev"
-version = "0.1.0"
+version = "0.2.0"
 description = "Typed decisions from a frozen open model, one forward pass, on Apple Silicon"
 requires-python = ">=3.10"
 dependencies = ["mlx>=0.29", "mlx-lm>=0.28", "numpy>=1.26", "huggingface-hub>=0.28"]
