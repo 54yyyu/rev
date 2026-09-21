@@ -43,11 +43,11 @@ def main() -> int:
     p.add_argument("--both-orders", action="store_true")
     a = p.parse_args()
 
-    from hinge import Hinge
-    from hinge.calibrate import coverage_curve, ece
+    from rev import Rev
+    from rev.calibrate import coverage_curve, ece
 
     rows = fetch(a.tier)
-    h = Hinge(a.model, bits=a.bits)
+    h = Rev(a.model, bits=a.bits)
     probs, gold, by_family = [], [], {}
     for r in rows:
         state = r["state"] if isinstance(r["state"], str) else json.dumps(r["state"], ensure_ascii=False)

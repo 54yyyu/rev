@@ -1,4 +1,4 @@
-# hinge
+# rev
 
 **Typed decisions from a frozen open model, in one forward pass, on Apple Silicon.**
 
@@ -7,9 +7,9 @@ for each option. Nothing is generated, so it cannot answer with something that
 was not on your list, and there is no JSON to repair.
 
 ```python
-from hinge import Hinge
+from rev import Rev
 
-h = Hinge("Qwen/Qwen3.5-2B")          # 8-bit by default, 1.9 GB resident
+h = Rev("Qwen/Qwen3.5-2B")          # 8-bit by default, 1.9 GB resident
 d = h.decide(
     "My card was charged twice for one order.",
     "Which team should handle this?",
@@ -30,7 +30,7 @@ everything here is how it is asked and how its logits are read.
 Three good implementations of this idea already exist — [SemIf], [reflex] and
 [decider] — and this one started as a measurement harness to compare them. It
 became its own thing when the measurements said the harness mattered more than
-the model: a frozen Qwen3.5-2B moved from 0.450 to 0.550 on JevBench's hard
+the model: a frozen Qwen3.5-2B moved from 0.428 to 0.523 on JevBench's hard
 public items without changing a single weight.
 
 [SemIf]: https://github.com/TheoLeeCJ/SemIf
@@ -41,10 +41,10 @@ What each of them contributed, and what was measured here:
 
 | from | what | measured |
 |---|---|---|
-| SemIf | Evidence / Criterion prompt, letter-slot readout, tokenizer round-trip checks | the reference; `hinge` matches it exactly, 40/40 items, probability delta 0 |
+| SemIf | Evidence / Criterion prompt, letter-slot readout, tokenizer round-trip checks | the reference; `rev` matches its in-process API exactly, probability delta 0 |
 | decider | a wide label space instead of a fixed alphabet | 16 slots → **101** on Qwen3.5 |
 | reflex | averaging two option orders | helps binary questions, hurts multiple choice; off by default |
-| here | **8-bit instead of 4-bit** | **+9.1 points on hard, no latency cost** |
+| here | **8-bit instead of 4-bit** | **+9.5 points on hard, no latency cost** |
 | here | a fitted per-option offset | +7.9 points on binary questions, transfers across task tiers |
 
 ## Measured
@@ -53,7 +53,7 @@ Qwen3.5-2B, 8-bit, on this machine (M-series, 16 GB), JevBench public items:
 
 | | easy (48) | standard (72) | hard (111) |
 |---|---:|---:|---:|
-| hinge, frozen Qwen3.5-2B | 1.000 | 0.764 | **0.550** |
+| rev, frozen Qwen3.5-2B | 1.000 | 0.764 | **0.523** |
 | decider-2b (fine-tuned, same base) | 1.000 | **0.861** | 0.477 |
 | reflex, published, 2B bf16 | 1.000 | — | 0.468 |
 | Jev 1.13.0 (commercial) | 1.000 | 0.986 | 0.730 |
@@ -99,12 +99,17 @@ Act above the threshold, hand the rest to a person. `Decision.above(t)` returns
   Exclude those in code.
 - Long inputs are slow and memory-hungry: a 2.8k-token question costs 3.7 s and
   most of the peak above.
+- Two of 111 hard items sit close enough that a last-bit difference decides
+  them. `rev` answers each question the same way wherever it sits in a batch
+  (`tests/test_determinism.py`); the reference implementation's CLI does not,
+  which is why its published hard figure is 0.541 against the 0.523 here on
+  identical items and identical weights.
 
 ## Install
 
 ```bash
 uv venv && uv pip install -e .
-python -m hinge.cli score --input decisions.jsonl --output answers.jsonl
+python -m rev.cli score --input decisions.jsonl --output answers.jsonl
 python bench/jevbench.py --tier standard
 ```
 
@@ -114,7 +119,7 @@ tool run through both.
 ## Calibration
 
 ```python
-from hinge.calibrate import fit_offsets, fit_temperature, coverage_curve
+from rev.calibrate import fit_offsets, fit_temperature, coverage_curve
 ```
 
 Fit on your own labelled rows — fifty is enough — and never on the rows you then

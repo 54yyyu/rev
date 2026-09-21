@@ -28,7 +28,7 @@ def _aliased_copy(path: Path) -> Path:
     kind = config.get("model_type")
     if kind not in ALIASES:
         return path
-    staged = Path(tempfile.mkdtemp(prefix="hinge-"))
+    staged = Path(tempfile.mkdtemp(prefix="rev-"))
     for item in path.iterdir():
         if item.name == "config.json":
             continue
@@ -38,11 +38,24 @@ def _aliased_copy(path: Path) -> Path:
     return staged
 
 
-def load(model: str, bits: int | None = 8, group_size: int = 64):
-    """Returns (model, tokenizer). `bits=None` keeps the checkpoint's precision."""
+DEFAULT_CACHE_LIMIT_MIB = 256
+
+
+def load(model: str, bits: int | None = 8, group_size: int = 64,
+         cache_limit_mib: int = DEFAULT_CACHE_LIMIT_MIB):
+    """Returns (model, tokenizer). `bits=None` keeps the checkpoint's precision.
+
+    The allocator cache is bounded. MLX otherwise keeps nearly all of system RAM
+    across variable-length prompts, which crowds out anything else on the
+    machine - and, because allocation state steers kernel selection, changes the
+    last bits of the logits on long inputs. Bounding it is also what makes a run
+    reproducible against the reference implementation.
+    """
     from mlx_lm import load as mlx_load
     from huggingface_hub import snapshot_download
 
+    mx.set_default_device(mx.gpu)
+    mx.set_cache_limit(cache_limit_mib * 1024 * 1024)
     path = Path(model).expanduser()
     if not path.is_dir():
         path = Path(snapshot_download(model))
@@ -50,6 +63,8 @@ def load(model: str, bits: int | None = 8, group_size: int = 64):
 
     net, tokenizer = mlx_load(str(path))
     if bits is not None:
-        nn.quantize(net, group_size=group_size, bits=bits)
-        mx.eval(net.parameters())
+        nn.quantize(net, group_size=group_size, bits=bits, mode="affine")
+    net.eval()
+    mx.eval(net.parameters())
+    mx.synchronize()
     return net, tokenizer

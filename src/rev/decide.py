@@ -1,7 +1,7 @@
 """The public API.
 
-    from hinge import Hinge
-    h = Hinge("Qwen/Qwen3.5-2B")
+    from rev import Rev
+    h = Rev("Qwen/Qwen3.5-2B")
     h.decide("My card was charged twice.",
              "Which team should handle this?",
              {"billing": "Payments, refunds and invoices",
@@ -54,7 +54,7 @@ def _as_options(options) -> list[tuple[str, str]]:
     return out
 
 
-class Hinge:
+class Rev:
     def __init__(self, model: str = "Qwen/Qwen3.5-2B", bits: int | None = 8,
                  max_tokens: int = 8192, temperature: float = 1.0,
                  offsets: Mapping[str, float] | None = None):
@@ -85,9 +85,15 @@ class Hinge:
                 f"{len(ids)} input tokens exceed max_tokens={self.max_tokens}; "
                 "shorten the state rather than letting it be truncated")
         check_boundary(self.tokenizer, prompt, ids, slots)
-        logits = self.model(mx.array([ids]))[:, -1, :]
-        mx.eval(logits)
-        return np.array([float(logits[0, token].item()) for _, token in slots]), len(ids)
+        mx.synchronize()
+        # Slice the answer position and widen before gathering, matching the
+        # reference implementation exactly. Reading elements one at a time from
+        # the native dtype builds a different graph, and on prompts of a few
+        # thousand tokens that costs the last bit or two of each logit.
+        logits = self.model(mx.array([ids]))[0, -1].astype(mx.float32)
+        selected = logits[mx.array([token for _, token in slots])].tolist()
+        mx.synchronize()
+        return np.array(selected, dtype=float), len(ids)
 
     def decide(self, state: Any, criterion: str, options, *, both_orders: bool = False) -> Decision:
         opts = _as_options(options)

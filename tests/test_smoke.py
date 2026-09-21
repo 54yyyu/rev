@@ -1,10 +1,10 @@
 """Enough to catch the failures that actually happened while building this."""
 import json, sys
 import numpy as np
-from hinge import Hinge
+from rev import Rev
 
 MODEL = "Qwen/Qwen3.5-2B"
-h = Hinge(MODEL, bits=8)
+h = Rev(MODEL, bits=8)
 fail = 0
 
 print(f"capacity: {h.capacity} slots")

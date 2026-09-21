@@ -1,9 +1,9 @@
-"""hinge must agree with SemIf's reference implementation where both can run."""
+"""rev must agree with SemIf's reference implementation where both can run."""
 import json, sys
 from pathlib import Path
 sys.path.insert(0, "/Users/yiyu/Documents/misc/semif/src")
 import numpy as np
-from hinge import Hinge
+from rev import Rev
 
 items = Path("/Users/yiyu/Documents/misc/system-one-boundary/jb_items.jsonl")
 if not items.exists():
@@ -13,7 +13,7 @@ from semif_phase1 import mlx_backend
 rows = [json.loads(l) for l in items.read_text().splitlines()][:40]
 model, tok, meta = mlx_backend.load_model(
     "Qwen/Qwen3.5-2B", "15852e8c16360a2fea060d615a32b45270f8a8fc", bits=8)
-h = Hinge.__new__(Hinge)
+h = Rev.__new__(Rev)
 h.model, h.tokenizer, h.max_tokens, h.temperature, h.offsets, h._slots = model, tok, 8192, 1.0, {}, None
 
 same, worst = 0, 0.0

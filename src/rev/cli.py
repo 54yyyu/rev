@@ -1,4 +1,4 @@
-"""`hinge score` - answer a JSONL file of decisions.
+"""`rev score` - answer a JSONL file of decisions.
 
 The input shape is SemIf's, so files written for either tool run through both:
 
@@ -16,7 +16,7 @@ from pathlib import Path
 
 
 def score(argv=None) -> int:
-    p = argparse.ArgumentParser(prog="hinge score", description=__doc__)
+    p = argparse.ArgumentParser(prog="rev score", description=__doc__)
     p.add_argument("--model", default="Qwen/Qwen3.5-2B")
     p.add_argument("--bits", type=int, default=8, choices=(4, 8, 0),
                    help="in-memory quantization; 0 keeps the checkpoint precision (default: 8)")
@@ -32,12 +32,12 @@ def score(argv=None) -> int:
     if a.output.exists():
         p.error(f"{a.output} exists; refusing to overwrite a result")
 
-    from .decide import Hinge
+    from .decide import Rev
 
     offsets = json.loads(a.offsets.read_text()) if a.offsets else None
     print(f"loading {a.model} ({'source precision' if a.bits == 0 else f'{a.bits}-bit'})...",
           file=sys.stderr)
-    h = Hinge(a.model, bits=None if a.bits == 0 else a.bits,
+    h = Rev(a.model, bits=None if a.bits == 0 else a.bits,
               max_tokens=a.max_tokens, temperature=a.temperature, offsets=offsets)
     print(f"{h.capacity} answer slots available", file=sys.stderr)
 
@@ -66,5 +66,5 @@ def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv and argv[0] == "score":
         return score(argv[1:])
-    print("usage: hinge score --input FILE --output FILE [--model M] [--bits 8]", file=sys.stderr)
+    print("usage: rev score --input FILE --output FILE [--model M] [--bits 8]", file=sys.stderr)
     return 2

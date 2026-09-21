@@ -90,5 +90,5 @@ third column decides it for a system that gates on confidence: the fine-tune is
 confidently wrong three times as often, so a threshold lets three times as many
 errors through. If a human reads every answer, prefer the fine-tune.
 
-Its harness was not the reason: running decider's weights through `hinge`
+Its harness was not the reason: running decider's weights through `rev`
 *improved* on its own published numbers (standard 0.847 → 0.861).
