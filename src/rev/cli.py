@@ -64,11 +64,20 @@ def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv and argv[0] == "score":
         return score(argv[1:])
+    if argv and argv[0] == "ask":
+        from .ask import ask
+        return ask(argv[1:])
+    if argv and argv[0] == "health":
+        from .ask import health
+        return health(argv[1:])
     if argv and argv[0] == "serve":
         from .serve import serve
         return serve(argv[1:])
     print("usage: rev serve [--port 8421] [--model M] [--bits 8] [--upstream URL]\n"
-          "       rev score --input FILE --output FILE [--model M] [--bits 8] [--upstream URL]",
+          "       rev score --input FILE --output FILE [--model M] [--bits 8] [--upstream URL]\n"
+          "       rev ask [REQUEST.json] [--questions Q.json] [--state-file F] [--image P] [--brief]\n"
+          "       rev ask --jsonl FILE [--questions Q.json] [-j 2] [-o OUT]\n"
+          "       rev health                  (server: --url, else $REV_URL, else the local one)",
           file=sys.stderr)
     return 2
 

@@ -57,6 +57,19 @@ rev.noul(state, "Does this convey urgency?")      # probability of yes
 copy of the weights for every tool on the machine; it binds 127.0.0.1 unless
 told otherwise, and refuses to start on a port that is already taken.
 
+From a shell, against `--url`, `$REV_URL` or the local server:
+
+```bash
+rev health                                        # exit 0 up, 3 down
+rev ask request.json --brief                      # {"state": ..., "questions": {...}}
+rev ask --questions q.json --state-file notes.txt --image shot.png --brief
+rev ask --jsonl items.jsonl --questions q.json -o answers.jsonl   # one request per line
+```
+
+`skills/rev/` is an [Agent Skill](https://agentskills.io) that teaches a coding
+agent when a call is worth making and how to ask; link it into the agent's
+skills directory (`~/.pi/agent/skills/`, `~/.claude/skills/`, ...).
+
 The three question types are Jev's: `choice` (a map of options), `noul` (yes/no,
 answer is the probability of yes) and `score` (ordered levels, answer is the
 probability-weighted level). Instructions and criteria may be strings, objects

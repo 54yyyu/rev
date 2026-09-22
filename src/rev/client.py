@@ -21,6 +21,15 @@ from .decision import Decision
 from .serve import DEFAULT_PORT
 
 
+class RevError(RuntimeError):
+    """A request that did not come back as an answer. `status` is the HTTP code,
+    or None when the server could not be reached at all."""
+
+    def __init__(self, message: str, status: int | None = None):
+        super().__init__(message)
+        self.status = status
+
+
 class Client:
     def __init__(self, url: str = f"http://127.0.0.1:{DEFAULT_PORT}", key: str | None = None,
                  model: str = "jev-latest", timeout: float = 120):
@@ -39,9 +48,10 @@ class Client:
                 return json.loads(resp.read())
         except urllib.error.HTTPError as e:
             detail = e.read().decode(errors="replace")
-            raise RuntimeError(f"{e.code} from {self.url}: {detail}") from None
-        except urllib.error.URLError as e:
-            raise RuntimeError(f"cannot reach {self.url} ({e.reason}); is `rev serve` running?") from None
+            raise RevError(f"{e.code} from {self.url}: {detail}", e.code) from None
+        except (urllib.error.URLError, OSError) as e:
+            reason = getattr(e, "reason", e)
+            raise RevError(f"cannot reach {self.url} ({reason}); is `rev serve` running?") from None
 
     def decide(self, state: Any, criterion: str, options: Mapping[str, str]) -> Decision:
         """One choice question, returned the way `Rev.decide` returns it."""
