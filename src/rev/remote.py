@@ -1,10 +1,10 @@
 """The same decisions from a model that is already being served elsewhere.
 
     from rev.remote import Remote
-    h = Remote("http://localhost:30002")           # an sglang endpoint (fleet)
+    h = Remote("http://localhost:30002")           # an sglang endpoint
     h.decide(state, "Which team should handle this?", {...})
 
-fleet keeps a 27B model up on a cluster for coding agents. Nothing about the
+We keep a 27B model up on a cluster for coding agents. Nothing about the
 readout needs the model in this process: the prompt is rendered here with the
 served model's own tokenizer and chat template (thinking off, for this request
 only - the server's default is untouched and every other client keeps theirs),
@@ -18,7 +18,7 @@ Two ways to read the distribution, chosen at the first request:
   returns the log-probability of each slot token at the first output position.
   This is the same quantity the MLX engine reads.
 - sampled: some speculative decoders refuse to return log-probabilities at all
-  (DSpark, on the fleet endpoint as of 2026-09-21: "DSpark speculative decoding
+  (DSpark, on our endpoint as of 2026-09-21: "DSpark speculative decoding
   does not support return_logprob yet"). Then `n` single-token samples are
   drawn at temperature 1 and the slot counts estimate the distribution. The
   prefix is cached server-side, so 32 samples cost about half a second; the
@@ -45,7 +45,7 @@ from .base import Decider
 from .labels import check_boundary
 from .prompt import render
 
-# The tokenizer of what fleet serves as qwen38-27b. Only tokenizer and template
+# The tokenizer of the model we serve. Only tokenizer and template
 # files are fetched; the weights are never touched.
 DEFAULT_TOKENIZER = "abhishekchohan/Qwen3.8-27B-AWQ-INT4"
 DEFAULT_SAMPLES = 32
@@ -199,7 +199,7 @@ def add_engine_args(p) -> None:
     """The flags every entry point shares for choosing an engine."""
     p.add_argument("--upstream", metavar="URL",
                    help="use a running sglang server instead of loading a model here, "
-                        "e.g. http://localhost:30002 (fleet) - thinking is off for these "
+                        "e.g. http://localhost:30002 - thinking is off for these "
                         "requests only")
     p.add_argument("--tokenizer", default=DEFAULT_TOKENIZER,
                    help=f"with --upstream: the served model's tokenizer (default {DEFAULT_TOKENIZER})")

@@ -39,7 +39,7 @@ hard and faster on short questions, and the leaderboard's composite cannot
 show that. If it is ever wanted: make the repo public with a LICENSE, write a
 Slurm-free recipe (`sglang serve Qwen/Qwen3.8-27B` + `rev serve --upstream`;
 the DSpark patch is not needed on a plain sglang), run their harness on the
-231 public items against `oracle:8421` for numbers in their metric, disclose
+231 public items against our hosted `rev serve` for numbers in their metric, disclose
 that the second-reading rule was chosen on 2B with public items, file the
 issue. Their harness is also the way to get our Intelligence / Calibration in
 their units without submitting.

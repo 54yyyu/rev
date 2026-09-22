@@ -13,22 +13,18 @@ Chinese; later sections overturn earlier ones.
 
 - Venv: `.venv/` (`uv pip install -e ".[mlx,bench]"`; plain `-e .` has no MLX and only serves `--upstream`). No pytest; tests are
   scripts: `for t in tests/test_*.py; do .venv/bin/python $t; done`.
-  `test_equivalence.py` needs the SemIf checkout at `~/Documents/misc/semif`.
+  `test_equivalence.py` needs a SemIf checkout (path at the top of the file) and skips without it.
 - `rev serve` listens on 127.0.0.1:8421 and speaks Jev's `/v1/systemone`
   protocol. Check the port is free first and stop the server when done;
   never take :8000, :5173 or :8443 (Parley).
-- `rev serve --upstream http://localhost:30002` (or `--upstream
-  http://<relay>:30002` from any tailnet device, no ssh; the relay hostname is in memory, not here) uses
-  the 27B model fleet serves on ORCD instead of loading one here:
-  `src/rev/remote.py`. Thinking is off in the prompt it renders, per request;
-  the server's default stays as the coding agents want it. That endpoint runs
-  DSpark speculative decoding, which refuses `return_logprob`, so the engine
-  falls back to 32 single-token samples per reading (see DECISIONS.md); it
-  switches to exact log-probabilities by itself if the server ever allows them.
-  `tests/test_remote.py` and `bench/jevbench.py --upstream URL` run against it.
-- The relay host runs it: `Client("http://<relay>:8421")` from
-  any tailnet device. `ssh oracle`, user service `rev.service`, venv at
-  `~/rev/.venv` (no MLX there). README "already running on the relay host".
+- `rev serve --upstream URL` reads a model an sglang server already serves
+  (`src/rev/remote.py`), with the served model's tokenizer (`--tokenizer`).
+  Thinking is off in the prompt it renders, per request; the server's default
+  is untouched. Exact log-probabilities when the server returns them, else 32
+  single-token samples per reading, re-tested every five minutes (DECISIONS.md).
+  `tests/test_remote.py` (REV_UPSTREAM) and `bench/jevbench.py --upstream URL`
+  run against it. Where our own upstream and hosted `rev serve` live is
+  private-infrastructure detail kept outside this repo.
 - Jev itself: key in `~/typesafe.txt`; `rev.Client("https://api.typesafe.ai",
   key=...)` is the same client. Only send synthetic or public items unless
   the user says otherwise; their mail has never been sent to Jev.
@@ -37,7 +33,7 @@ Chinese; later sections overturn earlier ones.
 
 - `bench/usecases.py`: the user's tasks. Clipboard paste and the write-action
   gate are synthetic; calendar and mail are read live from this Mac through
-  pyapple (`~/Documents/projects/pyapple-mcp`). Mail must be labelled by the
+  pyapple. Mail must be labelled by the
   rule in `bench/cases.py` *before* the model runs; personal data stays in
   `bench/private/` (git-ignored) and should be deleted after use.
 - `bench/jevbench.py --tier hard|standard|easy`: public JevBench items.

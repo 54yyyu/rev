@@ -5,7 +5,7 @@ argued; the numbers are on JevBench public items with Qwen3.5-2B unless stated.
 
 ## A remote engine, sampled where log-probabilities are refused — 2026-09-21
 
-fleet serves `qwen38-27b` on ORCD for coding agents. The readout needs nothing
+A cluster of ours serves Qwen3.8-27B through sglang for coding agents. The readout needs nothing
 from the model except the next-token distribution at one position, so
 `rev.remote.Remote` renders the prompt here with the served model's tokenizer
 (thinking off, in the prompt, per request; the server's default is not
@@ -52,8 +52,8 @@ default.** The speed table in the README was taken at 64, before the sweep.
 
 ## The endpoint answers logprobs after all — 2026-09-22
 
-Rather than give up DSpark, fleet patches the image
-(`fleet/patches/sglang-qwen38/`, bound over the source at container start):
+Rather than give up DSpark, our serving setup patches the sglang image (three
+files bound over the source at container start; not published yet, ask):
 the scheduler's rejection is removed, prefill already computed logprobs through
 the target worker's sampler, and decode gathers them from the verify logits the
 way DFlash does. A third file fixes a stock sglang crash that only became

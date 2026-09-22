@@ -1,6 +1,6 @@
 """The remote engine reads a served model, and `rev serve --upstream` speaks
 Jev's protocol in front of it. Needs an sglang endpoint: REV_UPSTREAM, default
-fleet's tunnel at http://localhost:30002. Skips (exit 0) when none answers."""
+http://localhost:30002. Skips (exit 0) when none answers."""
 import json, os, socket, subprocess, sys, time, urllib.request
 from rev import Client
 

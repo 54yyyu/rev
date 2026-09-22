@@ -64,57 +64,53 @@ or arrays, as in Jev.
 
 ## The same decisions from a model that is already served
 
-`rev serve --upstream URL` reads a model that an sglang server is already
-serving for something else, instead of loading one here. The case it was built
-for is [fleet]'s `qwen38-27b` on the ORCD cluster: one endpoint keeps serving
-coding agents with thinking on, and `rev` renders its own prompts with thinking
-off, per request, and asks for one token.
+`rev serve --upstream URL` reads a model that an [sglang] server is already
+serving for something else, instead of loading one here. We run it this way
+against a Qwen3.8-27B that a cluster serves for coding agents: the agents keep
+their endpoint, thinking on; `rev` renders its own prompts with thinking off,
+per request, and asks for one token. Anything that speaks sglang's `/generate`
+will do.
+
+[sglang]: https://github.com/sgl-project/sglang
 
 ```bash
-rev serve --upstream http://localhost:30002                    # fleet's tunnel
-rev serve --upstream http://<relay>:30002     # from any tailnet device, no ssh
+# on a machine with a GPU (one 48 GB card holds the INT4 checkpoint)
+python -m sglang.launch_server --model-path Qwen/Qwen3.8-27B --port 30002 \
+    --reasoning-parser qwen3
+
+# anywhere that can reach it; no GPU, no MLX, no weights
+uv venv && uv pip install -e .
+rev serve --upstream http://localhost:30002 --tokenizer Qwen/Qwen3.8-27B
 python bench/jevbench.py --tier hard --upstream http://localhost:30002
 ```
 
-It is also already running on the relay host, so from any tailnet device the
-whole thing is one URL, the way Jev is:
-
-```python
-from rev import Client
-rev = Client("http://<relay>:8421")
-```
-
-That is `rev serve --upstream http://127.0.0.1:30002` on oracle as the user
-service `rev.service` (`systemctl --user status rev`, `journalctl --user -u
-rev`), published with `tailscale serve --tcp 8421`. It follows the cluster
-endpoint through its six-hourly renewals: an upstream that is down answers
-502 until it is back, and a refusal of log-probabilities is re-tested every
-five minutes. Redeploy with `rsync -az --exclude .venv/ --exclude .git/ ./
-oracle:~/rev/ && ssh oracle systemctl --user restart rev`.
+`--tokenizer` is the served model's repo or directory; only the tokenizer and
+chat template are fetched, never the weights. The endpoint can be anywhere: we
+keep `rev serve --upstream` running on a small always-on host next to the
+cluster's relay, so every device on our network uses one URL, the way Jev is
+used. An upstream that is down answers 502 until it is back; a server that is
+replaced (ours is, every few hours) is picked up without a restart.
 
 Everything in front of the engine is unchanged: the route, `Client`, the
 second reading when unsure, the confidence rule. Only where the logits come
 from differs.
 
-[fleet]: ../fleet
-
 Two ways to read them. With `return_logprob` the server hands back the
 log-probability of each answer letter at the answer position, the same number
-the MLX engine reads. That is what the fleet endpoint does now: its image
-refused `return_logprob` under DSpark speculative decoding, and
-`fleet/patches/sglang-qwen38/` teaches it to answer. Against a server that
-still refuses, the engine draws `--samples` single-token samples at
-temperature 1 and counts the letters, retrying the exact path every five
-minutes.
+the MLX engine reads. Some speculative decoders refuse `return_logprob`
+(sglang's DSpark did, on our server); then the engine draws `--samples`
+single-token samples at temperature 1 and counts the letters, and re-tests the
+exact path every five minutes. We patched our server so DSpark answers; the
+patch is small and we will publish it if anyone asks.
 
-JevBench public items, `qwen38-27b` (27B, INT4 AWQ, 2x L40S) read exactly,
+JevBench public items, Qwen3.8-27B (INT4 AWQ, 2x L40S, DSpark) read exactly,
 2026-09-22:
 
 | | easy (48) | standard (72) | hard (111) |
 |---|---:|---:|---:|
 | rev, Qwen3.5-2B on this laptop | 1.000 | 0.764 | 0.550 |
-| rev, qwen38-27b via fleet, 32 samples (before the patch) | 1.000 | 0.986 | 0.784 |
-| **rev, qwen38-27b via fleet, exact** | **1.000** | **0.986** | **0.784** |
+| rev, Qwen3.8-27B via sglang, 32 samples | 1.000 | 0.986 | 0.784 |
+| **rev, Qwen3.8-27B via sglang, exact** | **1.000** | **0.986** | **0.784** |
 | Jev 1.13.0 (commercial) | 1.000 | 0.986 | 0.730 |
 
 `docs/JEVBENCH.md` is why this is not on the public leaderboard.
@@ -124,10 +120,11 @@ family (0.400, Jev 0.267). At the 0.9 gate, standard answers 78% of items at
 1.000 and hard 35% at 1.000, and the confidences are the model's own rather
 than a sample fraction.
 
-Speed, same client and items, the laptop talking to `rev serve` on the relay
-host over the tailnet, which talks to the cluster:
+Speed, same client and items. The laptop talks to `rev serve` on the always-on
+host, which talks to the cluster over an ssh relay, so every number includes
+two network hops:
 
-| request | via fleet, exact p50 / p95 | rev local 2B p50 / p95 | Jev p50 / p95 |
+| request | via sglang, exact p50 / p95 | rev local 2B p50 / p95 | Jev p50 / p95 |
 |---|---:|---:|---:|
 | short: clipboard paste | **145 / 153 ms** | 266 / 473 ms | 354 / 423 ms |
 | medium: JevBench standard | **138 / 251 ms** | 240 / 423 ms | 356 / 396 ms |
@@ -140,14 +137,16 @@ host over the tailnet, which talks to the cluster:
 
 Faster than the laptop and than Jev on short and medium questions; level with
 Jev on a long document's median and behind at p95 and under concurrency, where
-two L40S reading 1-4k tokens are the limit. Before the patch, with 64 samples
-per reading, the same rows were 1189 / 1085 / 2037 / 4984 ms at p50 and 0.2-0.7
-per second in flight (`bench/results/speed-remote-64.json`).
+two L40S reading 1-4k tokens are the limit. With 64 samples per reading
+instead of exact log-probabilities, the same rows were 1189 / 1085 / 2037 /
+4984 ms at p50 and 0.2-0.7 per second in flight
+(`bench/results/speed-remote-64.json`).
 
 The endpoint keeps serving coding agents at the same time: their decode speed
-with thinking on was the same before and after the patch (code 131-145 tok/s,
-prose 95-108 tok/s on 600-token answers), and rev's one-token requests share
-the batch with them.
+with thinking on was the same before and after rev started using it (code
+131-145 tok/s, prose 95-108 tok/s on 600-token answers). One rev client
+running flat out costs them about a fifth; four saturating clients about half,
+which is what sharing two cards means.
 
 ## Why it exists
 

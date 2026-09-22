@@ -1,7 +1,7 @@
 """`rev serve` - Jev's HTTP endpoint, on this machine.
 
     rev serve                      # http://127.0.0.1:8421, Qwen3.5-2B through MLX
-    rev serve --upstream http://localhost:30002   # the model fleet already serves
+    rev serve --upstream http://localhost:30002   # a model sglang already serves
     curl -s localhost:8421/v1/systemone -d '{"state": "...", "questions": {...}}'
 
 The route, request and response are TypeSafe's, so a client written for Jev
