@@ -76,6 +76,22 @@ rev serve --upstream http://<relay>:30002     # from any tailnet device, no ssh
 python bench/jevbench.py --tier hard --upstream http://localhost:30002
 ```
 
+It is also already running on the relay host, so from any tailnet device the
+whole thing is one URL, the way Jev is:
+
+```python
+from rev import Client
+rev = Client("http://<relay>:8421")
+```
+
+That is `rev serve --upstream http://127.0.0.1:30002` on oracle as the user
+service `rev.service` (`systemctl --user status rev`, `journalctl --user -u
+rev`), published with `tailscale serve --tcp 8421`. It follows the cluster
+endpoint through its six-hourly renewals: an upstream that is down answers
+502 until it is back, and a refusal of log-probabilities is re-tested every
+five minutes. Redeploy with `rsync -az --exclude .venv/ --exclude .git/ ./
+oracle:~/rev/ && ssh oracle systemctl --user restart rev`.
+
 Everything in front of the engine is unchanged: the route, `Client`, the
 second reading when unsure, the confidence rule. Only where the logits come
 from differs.

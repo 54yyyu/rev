@@ -26,6 +26,9 @@ Chinese; later sections overturn earlier ones.
   falls back to 32 single-token samples per reading (see DECISIONS.md); it
   switches to exact log-probabilities by itself if the server ever allows them.
   `tests/test_remote.py` and `bench/jevbench.py --upstream URL` run against it.
+- The relay host runs it: `Client("http://<relay>:8421")` from
+  any tailnet device. `ssh oracle`, user service `rev.service`, venv at
+  `~/rev/.venv` (no MLX there). README "already running on the relay host".
 - Jev itself: key in `~/typesafe.txt`; `rev.Client("https://api.typesafe.ai",
   key=...)` is the same client. Only send synthetic or public items unless
   the user says otherwise; their mail has never been sent to Jev.
