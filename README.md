@@ -113,7 +113,7 @@ JevBench public items, Qwen3.8-27B (INT4 AWQ, 2x L40S, DSpark) read exactly,
 
 | | easy (48) | standard (72) | hard (111) |
 |---|---:|---:|---:|
-| rev, Qwen3.5-2B on this laptop | 1.000 | 0.764 | 0.550 |
+| rev, Qwen3.5-2B in-process (M2 Pro, 16 GB) | 1.000 | 0.764 | 0.550 |
 | rev, Qwen3.8-27B via sglang, 32 samples | 1.000 | 0.986 | 0.784 |
 | **rev, Qwen3.8-27B via sglang, exact** | **1.000** | **0.986** | **0.784** |
 | Jev 1.13.0 (commercial) | 1.000 | 0.986 | 0.730 (0.721 measured 2026-09-22) |

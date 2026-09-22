@@ -7,13 +7,22 @@ Inputs (all in bench/results/, all written by the bench scripts, never by hand):
   speed-<system>.json             bench/speed.py --label       latency and throughput
 
 Systems drawn, in fixed colour order: rev on Qwen3.8-27B (blue), Jev (orange),
-rev on Qwen3.5-2B locally (aqua). Three series is the most this palette seats
-on one chart; add a fourth as a new chart, not a new colour.
+rev on Qwen3.5-2B on an M2 Pro (green). Three series is the most this palette
+seats on one chart; add a fourth as a new chart, not a new colour.
+
+Style: paper and ink, and the only colour on the page is data (the same rule
+as Parley, whose tokens these are). IBM Plex: Serif for the title, Sans for
+text, Mono for numbers. The fonts are fetched once into ~/.cache/rev/fonts
+(OFL, from the google/fonts repo); without them the charts fall back to
+DejaVu and say so.
 """
 
 from __future__ import annotations
 
 import json
+import os
+import sys
+import urllib.request
 from pathlib import Path
 
 import matplotlib
@@ -27,16 +36,53 @@ RESULTS = HERE / "results"
 OUT = HERE.parent / "docs" / "charts"
 
 SYSTEMS = [  # key, label, results suffix, speed file
-    ("27b", "rev, Qwen3.8-27B (served)", "27b", "speed-remote-logprob.json"),
-    ("jev", "Jev 1.13", "jev", "speed-jev.json"),
-    ("2b", "rev, Qwen3.5-2B (this laptop)", "2b", "speed-rev.json"),
+    ("27b", "rev, Qwen3.8-27B served by sglang (2x L40S)", "27b", "speed-remote-logprob.json"),
+    ("jev", "Jev 1.13 (api.typesafe.ai)", "jev", "speed-jev.json"),
+    ("2b", "rev, Qwen3.5-2B in-process (M2 Pro, 16 GB)", "2b", "speed-rev.json"),
 ]
+# Parley's tokens: paper / ink, rules, and its first three speaker hues for the
+# data. The dark hues are one step deeper than Parley's own so they sit in the
+# validated lightness band on the dark paper.
 THEMES = {
-    "light": {"surface": "#fcfcfb", "text": "#0b0b0b", "muted": "#52514e", "grid": "#e6e5e1",
-              "range": "#d9d8d3", "series": ["#2a78d6", "#eb6834", "#1baf7a"]},
-    "dark":  {"surface": "#1a1a19", "text": "#ffffff", "muted": "#c3c2b7", "grid": "#33332f",
-              "range": "#3d3d38", "series": ["#3987e5", "#d95926", "#199e70"]},
+    "light": {"surface": "#f5f6f7", "text": "#16181d", "muted": "#6c7079", "grid": "#dfe2e6",
+              "range": "#c9ced4", "series": ["#3b5bdb", "#e8590c", "#087f5b"]},
+    "dark":  {"surface": "#131519", "text": "#e6e8eb", "muted": "#969ba3", "grid": "#2a2e35",
+              "range": "#3b4048", "series": ["#5c7cfa", "#e8590c", "#0ca678"]},
 }
+
+FONT_DIR = Path(os.path.expanduser("~/.cache/rev/fonts"))
+FONT_FILES = {  # file name -> where google/fonts keeps it (OFL)
+    "IBMPlexSerif-SemiBold.ttf": "ofl/ibmplexserif/IBMPlexSerif-SemiBold.ttf",
+    "IBMPlexMono-Regular.ttf": "ofl/ibmplexmono/IBMPlexMono-Regular.ttf",
+    "IBMPlexSans-Variable.ttf": "ofl/ibmplexsans/IBMPlexSans%5Bwdth%2Cwght%5D.ttf",
+}
+FONTS = {"title": "IBM Plex Serif", "text": "IBM Plex Sans", "num": "IBM Plex Mono"}
+
+
+def ensure_fonts() -> bool:
+    """Register IBM Plex with matplotlib, fetching it on first use. False = fallback."""
+    import matplotlib.font_manager as fm
+    try:
+        FONT_DIR.mkdir(parents=True, exist_ok=True)
+        for name, path in FONT_FILES.items():
+            f = FONT_DIR / name
+            if not f.exists():
+                urllib.request.urlretrieve(f"https://raw.githubusercontent.com/google/fonts/main/{path}", f)
+        # Sans ships as a variable font; matplotlib wants one file per weight.
+        if not (FONT_DIR / "IBMPlexSans-SemiBold.ttf").exists():
+            from fontTools.ttLib import TTFont
+            from fontTools.varLib.instancer import instantiateVariableFont
+            for w, inst in ((400, "Regular"), (500, "Medium"), (600, "SemiBold")):
+                font = TTFont(FONT_DIR / "IBMPlexSans-Variable.ttf")
+                instantiateVariableFont(font, {"wght": w, "wdth": 100}).save(FONT_DIR / f"IBMPlexSans-{inst}.ttf")
+        for f in FONT_DIR.glob("IBMPlex*-*.ttf"):
+            if "Variable" not in f.name:
+                fm.fontManager.addfont(str(f))
+        return True
+    except Exception as e:                      # noqa: BLE001
+        print(f"[plot] IBM Plex unavailable ({e}); using DejaVu", file=sys.stderr)
+        FONTS.update(title="DejaVu Serif", text="DejaVu Sans", num="DejaVu Sans Mono")
+        return False
 FAMILY_LABEL = {
     "adversarial": "adversarial", "ambiguous": "ambiguous", "judge_hard": "judge",
     "long_policy": "long policy", "multi_hop": "multi-hop", "probability": "probability",
@@ -58,13 +104,29 @@ def style(ax, t):
     ax.tick_params(colors=t["muted"], labelsize=10, length=0)
     ax.grid(axis="x", color=t["grid"], linewidth=1)
     ax.set_axisbelow(True)
+    for lab in ax.get_xticklabels() + ax.get_yticklabels():
+        lab.set_family(FONTS["num"])
 
 
 def figure(t, height):
     fig = plt.figure(figsize=(11, height), dpi=180, facecolor=t["surface"])
-    plt.rcParams.update({"font.family": "DejaVu Sans", "text.color": t["text"],
+    plt.rcParams.update({"font.family": FONTS["text"], "text.color": t["text"],
                          "axes.labelcolor": t["muted"]})
     return fig
+
+
+def title(ax, t, main, sub, y=1.16, dy=0.075):
+    """Title in serif, subtitle in sans, both flush with the plot's left edge.
+    `y` is axes-relative; tall plots pass a smaller one so it stays on the page."""
+    ax.text(0, y, main, transform=ax.transAxes, ha="left", fontsize=15, color=t["text"],
+            family=FONTS["title"], weight=600)
+    ax.text(0, y - dy, sub, transform=ax.transAxes, ha="left", fontsize=9.5, color=t["muted"])
+
+
+def num(ax, x, y, text, t, **kw):
+    """A number in mono, in ink, never in the series colour."""
+    kw.setdefault("fontsize", 9); kw.setdefault("color", t["muted"])
+    ax.text(x, y, text, family=FONTS["num"], **kw)
 
 
 def dot(ax, x, y, color, t, z=3):
@@ -90,8 +152,8 @@ def accuracy(theme):
     n = data["27b"]["hard"]["n_by_family"]
     frows = [(f"{FAMILY_LABEL.get(f, f)} ({n[f]})", (lambda f: lambda d: d["hard"]["by_family"][f])(f)) for f in fams]
 
-    fig = figure(t, 8.2)
-    ax = fig.add_axes([0.24, 0.10, 0.70, 0.78])
+    fig = figure(t, 8.4)
+    ax = fig.add_axes([0.24, 0.09, 0.72, 0.78])
     style(ax, t)
     ys, labels = [], []
     y = 0
@@ -115,19 +177,19 @@ def accuracy(theme):
         # direct labels: the served 27B above, Jev below, only where they differ from each other
         a, b = vals.get("27b"), vals.get("jev")
         if a is not None:
-            ax.text(a * 100, y + 0.40, f"{a*100:.0f}", ha="center", va="bottom", fontsize=9, color=t["muted"])
+            num(ax, a * 100, y + 0.40, f"{a*100:.0f}", t, ha="center", va="bottom")
         if b is not None and (a is None or abs(a - b) > 0.005):
-            ax.text(b * 100, y - 0.40, f"{b*100:.0f}", ha="center", va="top", fontsize=9, color=t["muted"])
+            num(ax, b * 100, y - 0.40, f"{b*100:.0f}", t, ha="center", va="top")
         ys.append(y); labels.append(label)
         y -= 1
-    ax.set_yticks(ys); ax.set_yticklabels(labels, fontsize=10.5, color=t["text"])
     ax.set_xlim(15, 104); ax.set_ylim(y + 0.2, 0.9)
     ax.set_xticks([20, 40, 60, 80, 100]); ax.set_xticklabels([f"{v}%" for v in (20, 40, 60, 80, 100)])
-    ax.text(0.5, 1.10, "Where a frozen Qwen3.8-27B matches Jev, and where it does not",
-            transform=ax.transAxes, ha="center", fontsize=15, color=t["text"], weight="medium")
-    ax.text(0.5, 1.05, "Accuracy on JevBench's 231 public items, per tier and then per hard family. "
-                       "Same items for every system. 2026-09-22.",
-            transform=ax.transAxes, ha="center", fontsize=9.5, color=t["muted"])
+    ax.set_yticks(ys); ax.set_yticklabels(labels, fontsize=10.5, color=t["text"])
+    for lab in ax.get_yticklabels():
+        lab.set_family(FONTS["text"])
+    title(ax, t, "Where a frozen Qwen3.8-27B matches Jev, and where it does not",
+          "Accuracy on JevBench's 231 public items, per tier and then per hard family. "
+          "Same items for every system. 2026-09-22.", y=1.09, dy=0.04)
     ax.axhline(-2.8, color=t["grid"], linewidth=1)
     ax.text(16, -3.05, "hard tier by family", fontsize=9, color=t["muted"], va="top")
     legend(fig, t, [s[1] for s in SYSTEMS], t["series"])
@@ -155,19 +217,19 @@ def latency(theme):
             ax.plot([p50, p95], [y, y], color=t["series"][j], linewidth=2, alpha=0.45, zorder=2,
                     solid_capstyle="round")
             dot(ax, p50, y, t["series"][j], t)
-            ax.text(p95 * 1.08, y, f"{p50} / {p95} ms", va="center", fontsize=8.5, color=t["muted"])
+            num(ax, p95 * 1.08, y, f"{p50} / {p95} ms", t, va="center", fontsize=8.5)
         ys.append(-i); labels.append(label)
     ax.set_xscale("log")
     ax.xaxis.set_minor_locator(matplotlib.ticker.NullLocator())
     ax.set_xlim(90, 9000)
     ax.set_xticks([100, 300, 1000, 3000]); ax.set_xticklabels(["100 ms", "300 ms", "1 s", "3 s"])
     ax.set_yticks(ys); ax.set_yticklabels(labels, fontsize=10.5, color=t["text"])
+    for lab in ax.get_yticklabels():
+        lab.set_family(FONTS["text"])
     ax.set_ylim(-len(kinds) + 0.45, 0.55)
-    ax.text(0.5, 1.16, "One question, end to end: median, with the line reaching p95",
-            transform=ax.transAxes, ha="center", fontsize=15, color=t["text"], weight="medium")
-    ax.text(0.5, 1.08, "Same client, same items. The 27B is two network hops away on a cluster; "
-                       "Jev via its API; the 2B in-process on an M2 Pro.",
-            transform=ax.transAxes, ha="center", fontsize=9.5, color=t["muted"])
+    title(ax, t, "One question, end to end: median, with the line reaching p95",
+          "Same client, same items. The 27B is two network hops away on a cluster; "
+          "Jev via its API; the 2B in-process on an M2 Pro.")
     legend(fig, t, [s[1] for s in SYSTEMS], t["series"])
     fig.savefig(OUT / f"latency-{theme}.png", facecolor=t["surface"])
     plt.close(fig)
@@ -176,8 +238,8 @@ def latency(theme):
 # --- 3. the gate: coverage against accuracy on hard ----------------------------
 def gate(theme):
     t = THEMES[theme]
-    fig = figure(t, 4.8)
-    ax = fig.add_axes([0.10, 0.17, 0.86, 0.62])
+    fig = figure(t, 5.0)
+    ax = fig.add_axes([0.10, 0.22, 0.86, 0.58])
     style(ax, t)
     ax.grid(axis="y", color=t["grid"], linewidth=1)
     for j, (k, label, suf, _) in enumerate(SYSTEMS):
@@ -207,17 +269,16 @@ def gate(theme):
     ax.set_yticks([50, 60, 70, 80, 90, 100]); ax.set_yticklabels(["50%", "60%", "70%", "80%", "90%", "100%"])
     ax.set_xlabel("share of hard items answered (most confident first)", fontsize=9.5)
     ax.set_ylabel("accuracy on what was answered", fontsize=9.5)
-    ax.text(0.5, 1.16, "What a confidence gate buys on the hard tier",
-            transform=ax.transAxes, ha="center", fontsize=15, color=t["text"], weight="medium")
-    ax.text(0.5, 1.08, "Items sorted by each system's own confidence. Act above a threshold, "
-                       "hand the rest to a person; the dot is the 0.9 gate.",
-            transform=ax.transAxes, ha="center", fontsize=9.5, color=t["muted"])
+    title(ax, t, "What a confidence gate buys on the hard tier",
+          "Items sorted by each system's own confidence. Act above a threshold, "
+          "hand the rest to a person; the dot is the 0.9 gate.")
     legend(fig, t, [s[1] for s in SYSTEMS], t["series"])
     fig.savefig(OUT / f"gate-{theme}.png", facecolor=t["surface"])
     plt.close(fig)
 
 
 if __name__ == "__main__":
+    ensure_fonts()
     OUT.mkdir(parents=True, exist_ok=True)
     for theme in THEMES:
         accuracy(theme); latency(theme); gate(theme)
