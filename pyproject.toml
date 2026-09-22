@@ -6,7 +6,9 @@ requires-python = ">=3.10"
 # The base install is enough for `rev serve --upstream URL` and `Client` on any
 # machine (the relay host is an aarch64 Linux box with no GPU). The in-process
 # engine needs MLX, which only exists on Apple Silicon: `.[mlx]`.
-dependencies = ["numpy>=1.26", "huggingface-hub>=0.28", "transformers>=4.45"]
+# jinja2 renders the chat template; transformers imports it lazily and does not
+# depend on it, so it must be listed here.
+dependencies = ["numpy>=1.26", "huggingface-hub>=0.28", "transformers>=4.45", "jinja2>=3.1"]
 
 [project.optional-dependencies]
 mlx = ["mlx>=0.29", "mlx-lm>=0.28"]

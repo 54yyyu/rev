@@ -75,6 +75,10 @@ def make_handler(rev, lock, orders: str):
             except RemoteError as e:
                 # The model behind --upstream, not this request, is the problem.
                 return self._send(502, {"error": f"upstream: {e.message}"})
+            except Exception as e:                       # noqa: BLE001
+                # A JSON 500 rather than a dropped connection: the client sees why.
+                sys.stderr.write(f"{type(e).__name__}: {e}\n")
+                return self._send(500, {"error": f"{type(e).__name__}: {e}"})
             self._send(200, out)
 
         def log_message(self, fmt, *args):
