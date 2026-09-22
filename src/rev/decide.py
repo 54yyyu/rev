@@ -23,7 +23,7 @@ from .base import Decider
 from .engine import last_position_head, load
 from .prefix import StateCache
 from .labels import check_boundary
-from .prompt import render
+from .prompt import render, split_images
 
 
 class Rev(Decider):
@@ -40,6 +40,9 @@ class Rev(Decider):
                          orders=orders, auto_threshold=auto_threshold)
 
     def _branch(self, state: Any, criterion: str, options: list[tuple[str, str]]) -> tuple[np.ndarray, int]:
+        if split_images(state)[1]:
+            raise ValueError("this engine reads text only; images need a vision model "
+                             "served by sglang (rev serve --upstream URL)")
         slots = self.slots[: len(options)]
         prompt = render(self.tokenizer, state, criterion,
                         [(slot[0], text) for slot, (_, text) in zip(slots, options)])

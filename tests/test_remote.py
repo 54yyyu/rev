@@ -31,6 +31,23 @@ d2 = h.decide(state, "Which team should handle this?", dict(reversed(list(opts.i
 if d2.choice != d.choice:
     print(f"  FAIL: order changed the answer ({d.choice} -> {d2.choice})"); fail += 1
 
+# Images reach the model: a solid colour read from a picture, not from the text.
+import base64, struct, zlib
+def png(rgb, w=64, h=64):
+    raw = b"".join(b"\x00" + bytes(rgb) * w for _ in range(h))
+    ck = lambda t, d: struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t + d))
+    return "data:image/png;base64," + base64.b64encode(
+        b"\x89PNG\r\n\x1a\n" + ck(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0))
+        + ck(b"IDAT", zlib.compress(raw)) + ck(b"IEND", b"")).decode()
+colours = {"red": "Red", "green": "Green", "blue": "Blue"}
+for want, rgb in (("red", (220, 20, 20)), ("green", (20, 170, 40)), ("blue", (20, 40, 220))):
+    img = [{"type": "text", "text": "A photo of a wall."},
+           {"type": "image_url", "image_url": {"url": png(rgb)}}]
+    di = h.decide(img, "What colour is the wall?", colours)
+    print(f"image {want}: {di.choice} p={di.confidence:.3f} {di.seconds:.2f}s {di.input_tokens} tokens")
+    if di.choice != want:
+        print(f"  FAIL: image read as {di.choice}"); fail += 1
+
 # Thinking is off for this request only: the rendered prompt ends in an empty
 # reasoning block, and the server's own default is not touched.
 from rev.prompt import render
@@ -67,6 +84,12 @@ try:
         print("  FAIL: urgency"); fail += 1
     if not 0 <= a["frustration"]["score"] <= 2:
         print("  FAIL: score range"); fail += 1
+    out = c.ask([{"type": "image_url", "image_url": {"url": png((20, 40, 220))}}],
+                {"c": {"type": "choice", "instructions": "What colour is Picture 1?",
+                       "criteria": colours}})
+    print("served image:", out["answers"]["c"]["choice"], out["usage"])
+    if out["answers"]["c"]["choice"] != "blue":
+        print("  FAIL: image through rev serve"); fail += 1
     health = json.load(urllib.request.urlopen(f"http://127.0.0.1:{port}/health"))
     print("health:", health)
     if health.get("mode") not in ("logprob",) and "samples" not in str(health.get("mode")):

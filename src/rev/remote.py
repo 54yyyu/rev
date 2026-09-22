@@ -12,6 +12,11 @@ and the server is asked for the next-token distribution at the answer slots.
 The request is one prompt and one output token, so it rides alongside an
 agent's long generations without displacing them.
 
+Images in the state (OpenAI `image_url` content parts, see `prompt.split_images`)
+are sent to the server as `image_data`; the template's placeholders mark where
+they go, and the server's vision encoder reads them as it would for a chat
+request. Only the served model needs to see images; the tokenizer here does not.
+
 Two ways to read the distribution, chosen at the first request:
 
 - exact: `/generate` with `return_logprob` and `token_ids_logprob`, which
@@ -43,7 +48,7 @@ import numpy as np
 
 from .base import Decider
 from .labels import check_boundary
-from .prompt import render
+from .prompt import render, split_images
 
 # The tokenizer of the model we serve. Only tokenizer and template
 # files are fetched; the weights are never touched.
@@ -138,34 +143,39 @@ class Remote(Decider):
         except urllib.error.URLError as e:
             raise RemoteError(0, f"cannot reach {self.upstream} ({e.reason})") from None
 
-    def _logprobs(self, prompt: str, tids: list[int]) -> np.ndarray:
-        out = self._post({"text": prompt,
+    def _logprobs(self, prompt: str, tids: list[int], media: dict) -> tuple[np.ndarray, int | None]:
+        out = self._post({"text": prompt, **media,
                           "sampling_params": {"max_new_tokens": 1, "temperature": 0},
                           "return_logprob": True, "token_ids_logprob": tids})
         rows = out["meta_info"]["output_token_ids_logprobs"][0]    # [[logprob, id, text], ...]
         by_id = {int(r[1]): float(r[0]) for r in rows}
-        return np.array([by_id[t] for t in tids], dtype=float)
+        return np.array([by_id[t] for t in tids], dtype=float), out["meta_info"].get("prompt_tokens")
 
-    def _sampled(self, prompt: str, tids: list[int]) -> np.ndarray:
+    def _sampled(self, prompt: str, tids: list[int], media: dict) -> tuple[np.ndarray, int | None]:
         n = self.samples
-        out = self._post({"text": prompt,
+        out = self._post({"text": prompt, **media,
                           "sampling_params": {"max_new_tokens": 1, "temperature": 1.0,
                                               "top_p": 1.0, "top_k": -1, "n": n}})
         if isinstance(out, dict):
             out = [out]
+        served = out[0].get("meta_info", {}).get("prompt_tokens") if out else None
         counts = Counter(o["output_ids"][0] for o in out if o.get("output_ids"))
         off = sum(v for k, v in counts.items() if k not in tids)
         if off > n // 4:
             print(f"[remote] {off}/{n} samples were not an answer letter", file=sys.stderr)
         # Additive smoothing so an unseen option is unlikely rather than impossible;
         # softmax of these logs is the smoothed sample fraction.
-        return np.log([(counts.get(t, 0) + 0.5) / (n + 0.5 * len(tids)) for t in tids])
+        return np.log([(counts.get(t, 0) + 0.5) / (n + 0.5 * len(tids)) for t in tids]), served
 
     def _branch(self, state: Any, criterion: str, options: list[tuple[str, str]]) -> tuple[np.ndarray, int]:
         slots = self.slots[: len(options)]
+        state, images = split_images(state)
         prompt = render(self.tokenizer, state, criterion,
-                        [(slot[0], text) for slot, (_, text) in zip(slots, options)])
+                        [(slot[0], text) for slot, (_, text) in zip(slots, options)], len(images))
+        media = {"image_data": images} if images else {}
         ids = self.tokenizer.encode(prompt, add_special_tokens=False)
+        # The text alone; each image adds its own tokens on the server, which
+        # enforces its context length on the whole.
         if len(ids) > self.max_tokens:
             raise ValueError(
                 f"{len(ids)} input tokens exceed max_tokens={self.max_tokens}; "
@@ -178,11 +188,11 @@ class Remote(Decider):
             self.name = f"{self.served} via {self.upstream}"
         if self.exact is not False or time.monotonic() >= self._retry_exact_at:
             try:
-                z = self._logprobs(prompt, tids)
+                z, served = self._logprobs(prompt, tids, media)
                 if self.exact is not True:
                     print(f"[remote] {self.served}: reading log-probabilities", file=sys.stderr)
                 self.exact = True
-                return z, len(ids)
+                return z, served or len(ids)
             except RemoteError as e:
                 if e.code != 400 or "logprob" not in e.message.lower():
                     raise
@@ -192,7 +202,8 @@ class Remote(Decider):
                           f"retrying the exact path every {RETRY_EXACT_SECONDS} s", file=sys.stderr)
                 self.exact = False
                 self._retry_exact_at = time.monotonic() + RETRY_EXACT_SECONDS
-        return self._sampled(prompt, tids), len(ids)
+        z, served = self._sampled(prompt, tids, media)
+        return z, served or len(ids)
 
 
 def add_engine_args(p) -> None:

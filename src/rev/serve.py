@@ -30,7 +30,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from .remote import RemoteError, add_engine_args, engine_from_args
 
 DEFAULT_PORT = 8421
-MAX_BODY = 4 * 1024 * 1024
+# Room for a few base64 screenshots in a state.
+MAX_BODY = 32 * 1024 * 1024
 
 
 def _port_taken(host: str, port: int) -> bool:

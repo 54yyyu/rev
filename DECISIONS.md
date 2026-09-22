@@ -3,6 +3,29 @@
 Why this is the way it is. Each entry is something that was measured, not
 argued; the numbers are on JevBench public items with Qwen3.5-2B unless stated.
 
+## Images through the remote engine — 2026-09-22
+
+The coding agents send images to the same served model through chat
+completions; `rev` sent text only, so an image URL in a state was read as
+characters. sglang's `/generate` takes `image_data` next to a prompt whose
+template has placed the image placeholders, so the exact read stays exact:
+`prompt.split_images` takes `image_url` parts out of the state (leaving
+"Picture N" in the text), `render` puts one placeholder per image ahead of the
+text with the template's `add_vision_id`, and `Remote` sends the URLs. Text-only
+prompts are byte-for-byte unchanged.
+
+Measured on the live endpoint (Qwen3.8-27B AWQ, DSpark, log-probabilities):
+solid-colour images 3/3 at p >= 0.998 in 0.14 s; 1280x800 order-page
+screenshots (1,132 tokens with the image) 3/3 at p >= 0.993 in ~0.48 s. Under
+mixed load, one 1,500-token agent stream plus six clients reading screenshots
+with both orders for 45 s: 528 decisions, all correct, p50 0.49 s, p95 0.56 s,
+no errors, server up. Usage reports the server's prompt token count, which
+includes the image tokens.
+
+Only `data:image/` and http(s) URLs: sglang would read any other string as a
+path on its own disk. The MLX engine refuses images rather than reading the
+URL as text.
+
 ## A remote engine, sampled where log-probabilities are refused — 2026-09-21
 
 A cluster of ours serves Qwen3.8-27B through sglang for coding agents. The readout needs nothing

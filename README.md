@@ -95,6 +95,24 @@ Everything in front of the engine is unchanged: the route, `Client`, the
 second reading when unsure, the confidence rule. Only where the logits come
 from differs.
 
+**Images**, when the served model is a vision model. Put them in the state as
+OpenAI `image_url` content parts, the shape a chat-completions client already
+sends, anywhere in the state:
+
+```python
+rev.decide([{"type": "text", "text": "Screenshot of the orders page."},
+            {"type": "image_url", "image_url": {"url": "data:image/png;base64,..."}}],
+           "What happened to order #4471?",
+           {"refunded": "...", "cancelled": "...", "shipped": "..."})
+```
+
+Each image is shown to the model ahead of the text as "Picture 1", "Picture
+2", ..., and the text refers to it by that name. Only `data:image/` and
+http(s) URLs are accepted (anything else would be read from the model server's
+disk). Jev itself takes no images, and neither does the MLX engine; it answers
+400. On a 27B served model, a 1280x800 screenshot (~1.1k tokens) is read in
+about 0.5 s.
+
 Two ways to read them. With `return_logprob` the server hands back the
 log-probability of each answer letter at the answer position, the same number
 the MLX engine reads. Some speculative decoders refuse `return_logprob`
