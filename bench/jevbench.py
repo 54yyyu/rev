@@ -7,7 +7,7 @@ Downloads the items from the benchmark repository (MIT) on first run.
 
 from __future__ import annotations
 
-import argparse, json, urllib.request
+import argparse, json, time, urllib.request
 from collections import Counter
 from pathlib import Path
 
@@ -41,14 +41,16 @@ def main() -> int:
     p.add_argument("--model", default="Qwen/Qwen3.5-2B")
     p.add_argument("--bits", type=int, default=8)
     p.add_argument("--orders", default="auto", choices=("one", "two", "auto"))
+    from rev.remote import add_engine_args, engine_from_args
+    add_engine_args(p)
     a = p.parse_args()
 
-    from rev import Rev
     from rev.calibrate import coverage_curve, ece
 
     rows = fetch(a.tier)
-    h = Rev(a.model, bits=a.bits)
+    h = engine_from_args(a)
     probs, confs, gold, by_family = [], [], [], {}
+    t0 = time.perf_counter()
     for r in rows:
         state = r["state"] if isinstance(r["state"], str) else json.dumps(r["state"], ensure_ascii=False)
         d = h.decide(state, r["question"]["instructions"], options_of(r), orders=a.orders,
@@ -57,8 +59,10 @@ def main() -> int:
         by_family.setdefault(r["family"], []).append(d.choice == str(r["expected"]))
 
     hit = [max(p, key=p.get) == g for p, g in zip(probs, gold)]
-    print(f"\n{a.tier}  n={len(rows)}  model={a.model} {a.bits}-bit"
-          f" orders={a.orders}")
+    print(f"\n{a.tier}  n={len(rows)}  model={h.name}"
+          f"{'' if a.upstream else f' {a.bits}-bit'} orders={a.orders}"
+          f"{f' mode={h.mode}' if a.upstream else ''}"
+          f"  {time.perf_counter() - t0:.0f}s")
     print(f"  accuracy {np.mean(hit):.3f}   ECE {ece(probs, gold):.3f}")
     print("  by family:")
     for fam, v in sorted(by_family.items()):

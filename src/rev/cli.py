@@ -28,18 +28,15 @@ def score(argv=None) -> int:
     p.add_argument("--offsets", type=Path, help="JSON map of option id to logit shift")
     p.add_argument("--temperature", type=float, default=1.0)
     p.add_argument("--max-tokens", type=int, default=8192)
+    from .remote import add_engine_args, engine_from_args
+    add_engine_args(p)
     a = p.parse_args(argv)
 
     if a.output.exists():
         p.error(f"{a.output} exists; refusing to overwrite a result")
 
-    from .decide import Rev
-
     offsets = json.loads(a.offsets.read_text()) if a.offsets else None
-    print(f"loading {a.model} ({'source precision' if a.bits == 0 else f'{a.bits}-bit'})...",
-          file=sys.stderr)
-    h = Rev(a.model, bits=None if a.bits == 0 else a.bits,
-              max_tokens=a.max_tokens, temperature=a.temperature, offsets=offsets)
+    h = engine_from_args(a, max_tokens=a.max_tokens, temperature=a.temperature, offsets=offsets)
     print(f"{h.capacity} answer slots available", file=sys.stderr)
 
     rows = [json.loads(line) for line in a.input.read_text().splitlines() if line.strip()]
@@ -70,8 +67,9 @@ def main(argv=None) -> int:
     if argv and argv[0] == "serve":
         from .serve import serve
         return serve(argv[1:])
-    print("usage: rev serve [--port 8421] [--model M] [--bits 8]\n"
-          "       rev score --input FILE --output FILE [--model M] [--bits 8]", file=sys.stderr)
+    print("usage: rev serve [--port 8421] [--model M] [--bits 8] [--upstream URL]\n"
+          "       rev score --input FILE --output FILE [--model M] [--bits 8] [--upstream URL]",
+          file=sys.stderr)
     return 2
 
 

@@ -4,6 +4,7 @@ only the URL different.
     rev serve &                                   # in another terminal
     python bench/speed.py                         # the local server
     python bench/speed.py --jev                   # TypeSafe, key from ~/typesafe.txt
+    python bench/speed.py --label remote-64       # `rev serve --upstream ...` on 8421
 
 Only synthetic and public items are sent: clipboard paste, and JevBench's
 public standard and hard tiers. Writes bench/results/speed-<label>.json.
@@ -66,6 +67,8 @@ def main() -> int:
     p.add_argument("--jev", action="store_true", help="measure api.typesafe.ai instead")
     p.add_argument("--key-file", default="~/typesafe.txt")
     p.add_argument("--parallel", type=int, default=8)
+    p.add_argument("--label", help="name of the results file, speed-<label>.json "
+                                   "(default: rev, or jev with --jev)")
     a = p.parse_args()
 
     from rev import Client
@@ -74,6 +77,7 @@ def main() -> int:
                                key=Path(a.key_file).expanduser().read_text().strip()), "jev"
     else:
         client, label = Client(a.url), "rev"
+    label = a.label or label
 
     sets = request_sets()
     client.ask(*sets["short: clipboard paste"][0])            # warm-up, not counted

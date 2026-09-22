@@ -1,0 +1,38 @@
+{
+ "date": "2026-09-22",
+ "target": "rev",
+ "results": {
+  "short: clipboard paste": {
+   "n": 40,
+   "p50_ms": 1189,
+   "p95_ms": 1318,
+   "mean_input_tokens": 234,
+   "sequential_per_s": 0.82,
+   "parallel8_per_s": 0.64
+  },
+  "medium: JevBench standard": {
+   "n": 72,
+   "p50_ms": 1085,
+   "p95_ms": 2048,
+   "mean_input_tokens": 160,
+   "sequential_per_s": 0.85,
+   "parallel8_per_s": 0.67
+  },
+  "long: JevBench hard": {
+   "n": 111,
+   "p50_ms": 2037,
+   "p95_ms": 3420,
+   "mean_input_tokens": 1267,
+   "sequential_per_s": 0.49,
+   "parallel8_per_s": 0.4
+  },
+  "long: three questions per request": {
+   "n": 40,
+   "p50_ms": 4984,
+   "p95_ms": 6463,
+   "mean_input_tokens": 4039,
+   "sequential_per_s": 0.2,
+   "parallel8_per_s": 0.16
+  }
+ }
+}

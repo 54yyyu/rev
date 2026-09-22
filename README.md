@@ -62,6 +62,67 @@ answer is the probability of yes) and `score` (ordered levels, answer is the
 probability-weighted level). Instructions and criteria may be strings, objects
 or arrays, as in Jev.
 
+## The same decisions from a model that is already served
+
+`rev serve --upstream URL` reads a model that an sglang server is already
+serving for something else, instead of loading one here. The case it was built
+for is [fleet]'s `qwen38-27b` on the ORCD cluster: one endpoint keeps serving
+coding agents with thinking on, and `rev` renders its own prompts with thinking
+off, per request, and asks for one token.
+
+```bash
+rev serve --upstream http://localhost:30002                    # fleet's tunnel
+rev serve --upstream http://<relay>:30002     # from any tailnet device, no ssh
+python bench/jevbench.py --tier hard --upstream http://localhost:30002
+```
+
+Everything in front of the engine is unchanged: the route, `Client`, the
+second reading when unsure, the confidence rule. Only where the logits come
+from differs.
+
+[fleet]: ../fleet
+
+Two ways to read them. With `return_logprob` the server hands back the
+log-probability of each answer letter at the answer position, the same number
+the MLX engine reads. The fleet endpoint runs DSpark speculative decoding, and
+this sglang build refuses `return_logprob` under it, so the engine falls back to
+drawing `--samples` single-token samples at temperature 1 and counting the
+letters. It tries the exact path first and switches on its own if the server
+ever allows it.
+
+JevBench public items, `qwen38-27b` (27B, INT4 AWQ, 2x L40S) read this way,
+2026-09-21, 64 samples per reading:
+
+| | easy (48) | standard (72) | hard (111) |
+|---|---:|---:|---:|
+| rev, Qwen3.5-2B on this laptop | 1.000 | 0.764 | 0.550 |
+| **rev, qwen38-27b via fleet, 64 samples** | **1.000** | **0.972** | **0.757** |
+| Jev 1.13.0 (commercial) | 1.000 | 0.986 | 0.730 |
+
+Hard is above Jev; `temporal_numeric` is still the weak family (0.400, Jev
+0.267). At the 0.9 gate, standard answers 74% of items at 1.000 and hard 35% at
+1.000.
+
+The price is latency and load. Same client and items as the table above, the
+laptop talking to the cluster through the tunnel:
+
+| request | via fleet, 64 samples p50 / p95 | rev local p50 / p95 | Jev p50 / p95 |
+|---|---:|---:|---:|
+| short: clipboard paste | 1189 / 1318 ms | **266 / 473 ms** | 354 / 423 ms |
+| medium: JevBench standard | 1085 / 2048 ms | **240 / 423 ms** | 356 / 396 ms |
+| long: JevBench hard | 2037 / 3420 ms | 821 / 3666 ms | **326 / 437 ms** |
+| long, three questions | 4984 / 6463 ms | 1280 / 3862 ms | **328 / 388 ms** |
+| 8 requests in flight | 0.2-0.7 per s | 0.7-3.9 per s | **21-24 per s** |
+
+The round trip is not the cost: a single greedy token from the same prompt comes
+back in 90 ms. Sixty-four samples are sixty-four sequences, each holding a
+recurrent-state slot and a drafter step on the server, and eight requests in
+flight are five hundred. The default is now **32 samples**: same accuracy as 64
+on standard and hard (0.986 / 0.784), 60% of the time, and half the load on the
+endpoint; 16 lost three hard points (`DECISIONS.md`). Exact log-probabilities
+would cost one sequence per reading, and need the endpoint to run without
+DSpark.
+
 ## Why it exists
 
 Three good implementations of this idea already exist — [SemIf], [reflex] and

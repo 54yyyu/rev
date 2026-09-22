@@ -3,6 +3,58 @@
 Why this is the way it is. Each entry is something that was measured, not
 argued; the numbers are on JevBench public items with Qwen3.5-2B unless stated.
 
+## A remote engine, sampled where log-probabilities are refused — 2026-09-21
+
+fleet serves `qwen38-27b` on ORCD for coding agents. The readout needs nothing
+from the model except the next-token distribution at one position, so
+`rev.remote.Remote` renders the prompt here with the served model's tokenizer
+(thinking off, in the prompt, per request; the server's default is not
+touched) and asks sglang's `/generate` for it. `base.Decider` holds the reading
+policy so both engines run exactly the same one.
+
+Measured on the live endpoint (2x L40S, AWQ INT4, DSpark):
+
+- `return_logprob` + `token_ids_logprob` is the right call and is refused
+  outright: "DSpark speculative decoding does not support return_logprob
+  yet." So are `/v1/score` and OpenAI `logprobs`, the same check.
+- One greedy token: 90 ms, answer "A". The prompt tail is
+  `<think>\n\n</think>\n\n`, so the template honours `enable_thinking=False`.
+- `n` samples of one token at temperature 1: 16 in 0.29 s, 64 in 0.72 s
+  (prefix cached), 63 A / 1 B.
+
+So the engine tries the exact path first and, on that 400, estimates from
+samples with additive smoothing (0.5 per option), so an unseen option is
+unlikely rather than impossible and the smoothed fraction is the probability.
+Sampling noise is about sqrt(p(1-p)/n), 0.06 at n=64 near p=0.5, which blurs
+the confidence gate but not the choice.
+
+JevBench, 64 samples: easy 1.000, standard 0.972, hard 0.757 (Jev 0.730, the
+2B laptop model 0.550). Latency: 1.1-1.2 s on short questions, 2.0 s on
+1-4k-token documents, and throughput *falls* under concurrency (0.84/s
+sequential, 0.64/s with 8 in flight on short questions): every sample is a
+sequence with its own recurrent-state slot and drafter step, and 8 x 64 of them
+exceed the server's 64 running requests. That is also load the coding agents on
+the same endpoint feel.
+
+Samples per reading, same items, same day (accuracy / coverage at the 0.9
+gate, where selective accuracy was 1.000 in every cell / wall time):
+
+| samples | standard (72) | hard (111) |
+|---:|---|---|
+| 16 | 0.972 / 0.46 / 37 s | 0.730 / 0.27 / 103 s |
+| **32** | **0.986 / 0.71 / 52 s** | **0.784 / 0.30 / 146 s** |
+| 64 | 0.972 / 0.74 / 85 s | 0.757 / 0.35 / 239 s |
+
+32 and 64 are the same accuracy within noise (one or two items either way) and
+32 keeps most of the gate's coverage at 60% of the time and half the sequences
+on the server; 16 drops three hard points and halves the coverage. **32 is the
+default.** The speed table in the README was taken at 64, before the sweep.
+
+Not done, and why: serving without DSpark would give exact log-probabilities
+at one sequence per reading, and cost the agents roughly half their decode
+speed (`clusters/orcd.sh` in fleet has the numbers). That is the endpoint
+owner's call, and the engine needs no change when it is made.
+
 ## 8-bit is the default, not 4-bit — 2026-09-21
 
 4-bit costs **9.1 points** on the hard tier (0.450 against 0.541, both measured

@@ -17,6 +17,15 @@ Chinese; later sections overturn earlier ones.
 - `rev serve` listens on 127.0.0.1:8421 and speaks Jev's `/v1/systemone`
   protocol. Check the port is free first and stop the server when done;
   never take :8000, :5173 or :8443 (Parley).
+- `rev serve --upstream http://localhost:30002` (or `--upstream
+  http://<relay>:30002` from any tailnet device, no ssh) uses
+  the 27B model fleet serves on ORCD instead of loading one here:
+  `src/rev/remote.py`. Thinking is off in the prompt it renders, per request;
+  the server's default stays as the coding agents want it. That endpoint runs
+  DSpark speculative decoding, which refuses `return_logprob`, so the engine
+  falls back to 32 single-token samples per reading (see DECISIONS.md); it
+  switches to exact log-probabilities by itself if the server ever allows them.
+  `tests/test_remote.py` and `bench/jevbench.py --upstream URL` run against it.
 - Jev itself: key in `~/typesafe.txt`; `rev.Client("https://api.typesafe.ai",
   key=...)` is the same client. Only send synthetic or public items unless
   the user says otherwise; their mail has never been sent to Jev.
