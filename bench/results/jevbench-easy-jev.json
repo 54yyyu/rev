@@ -1,0 +1,746 @@
+{
+ "date": "2026-09-22",
+ "tier": "easy",
+ "model": "Jev (api.typesafe.ai)",
+ "mode": "hosted",
+ "orders": "auto",
+ "accuracy": 1.0,
+ "ece": 0.004583333333333273,
+ "by_family": {
+  "extraction": 1.0,
+  "fact": 1.0,
+  "intent": 1.0,
+  "tool_selection": 1.0
+ },
+ "n_by_family": {
+  "extraction": 12,
+  "fact": 12,
+  "intent": 12,
+  "tool_selection": 12
+ },
+ "items": [
+  {
+   "id": "easy-intent-00",
+   "family": "intent",
+   "type": "choice",
+   "gold": "track_order",
+   "choice": "track_order",
+   "probabilities": {
+    "track_order": 1.0,
+    "report_damage": 0.0,
+    "change_address": 0.0,
+    "cancel_order": 0.0,
+    "billing_question": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.48010037498897873
+  },
+  {
+   "id": "easy-intent-01",
+   "family": "intent",
+   "type": "choice",
+   "gold": "cancel_order",
+   "choice": "cancel_order",
+   "probabilities": {
+    "report_damage": 0.0,
+    "billing_question": 0.0,
+    "track_order": 0.0,
+    "cancel_order": 1.0,
+    "change_address": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3330143329803832
+  },
+  {
+   "id": "easy-intent-02",
+   "family": "intent",
+   "type": "choice",
+   "gold": "change_address",
+   "choice": "change_address",
+   "probabilities": {
+    "track_order": 0.0,
+    "report_damage": 0.0,
+    "change_address": 1.0,
+    "billing_question": 0.0,
+    "cancel_order": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3522192499949597
+  },
+  {
+   "id": "easy-intent-03",
+   "family": "intent",
+   "type": "choice",
+   "gold": "report_damage",
+   "choice": "report_damage",
+   "probabilities": {
+    "change_address": 0.0,
+    "cancel_order": 0.0,
+    "billing_question": 0.0,
+    "report_damage": 1.0,
+    "track_order": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.35584987499169074
+  },
+  {
+   "id": "easy-intent-04",
+   "family": "intent",
+   "type": "choice",
+   "gold": "billing_question",
+   "choice": "billing_question",
+   "probabilities": {
+    "track_order": 0.0,
+    "change_address": 0.0,
+    "report_damage": 0.0,
+    "cancel_order": 0.0,
+    "billing_question": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.2992321250203531
+  },
+  {
+   "id": "easy-intent-05",
+   "family": "intent",
+   "type": "choice",
+   "gold": "track_order",
+   "choice": "track_order",
+   "probabilities": {
+    "billing_question": 0.0,
+    "report_damage": 0.0,
+    "change_address": 0.0,
+    "cancel_order": 0.0,
+    "track_order": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.2827426669828128
+  },
+  {
+   "id": "easy-intent-06",
+   "family": "intent",
+   "type": "choice",
+   "gold": "set_alarm",
+   "choice": "set_alarm",
+   "probabilities": {
+    "turn_off_lights": 0.0,
+    "play_music": 0.0,
+    "set_alarm": 1.0,
+    "send_message": 0.0,
+    "weather": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.43319666598108597
+  },
+  {
+   "id": "easy-intent-07",
+   "family": "intent",
+   "type": "choice",
+   "gold": "play_music",
+   "choice": "play_music",
+   "probabilities": {
+    "send_message": 0.0,
+    "turn_off_lights": 0.0,
+    "play_music": 1.0,
+    "set_alarm": 0.0,
+    "weather": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3409466249868274
+  },
+  {
+   "id": "easy-intent-08",
+   "family": "intent",
+   "type": "choice",
+   "gold": "weather",
+   "choice": "weather",
+   "probabilities": {
+    "set_alarm": 0.0,
+    "play_music": 0.0,
+    "weather": 1.0,
+    "send_message": 0.0,
+    "turn_off_lights": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.41888445799122564
+  },
+  {
+   "id": "easy-intent-09",
+   "family": "intent",
+   "type": "choice",
+   "gold": "send_message",
+   "choice": "send_message",
+   "probabilities": {
+    "send_message": 1.0,
+    "weather": 0.0,
+    "play_music": 0.0,
+    "turn_off_lights": 0.0,
+    "set_alarm": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3642620829923544
+  },
+  {
+   "id": "easy-intent-10",
+   "family": "intent",
+   "type": "choice",
+   "gold": "turn_off_lights",
+   "choice": "turn_off_lights",
+   "probabilities": {
+    "send_message": 0.0,
+    "set_alarm": 0.0,
+    "weather": 0.0,
+    "play_music": 0.0,
+    "turn_off_lights": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3578383330022916
+  },
+  {
+   "id": "easy-intent-11",
+   "family": "intent",
+   "type": "choice",
+   "gold": "set_alarm",
+   "choice": "set_alarm",
+   "probabilities": {
+    "send_message": 0.0,
+    "set_alarm": 1.0,
+    "play_music": 0.0,
+    "weather": 0.0,
+    "turn_off_lights": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3695343330036849
+  },
+  {
+   "id": "easy-fact-00",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.99,
+    "no": 0.010000000000000009
+   },
+   "confidence": 0.99,
+   "seconds": 0.29587337499833666
+  },
+  {
+   "id": "easy-fact-01",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.03,
+    "no": 0.97
+   },
+   "confidence": 0.97,
+   "seconds": 0.29905200001667254
+  },
+  {
+   "id": "easy-fact-02",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.99,
+    "no": 0.010000000000000009
+   },
+   "confidence": 0.99,
+   "seconds": 0.34523054197779857
+  },
+  {
+   "id": "easy-fact-03",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.02,
+    "no": 0.98
+   },
+   "confidence": 0.98,
+   "seconds": 0.34448241599602625
+  },
+  {
+   "id": "easy-fact-04",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.99,
+    "no": 0.010000000000000009
+   },
+   "confidence": 0.99,
+   "seconds": 0.37813545801327564
+  },
+  {
+   "id": "easy-fact-05",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.04,
+    "no": 0.96
+   },
+   "confidence": 0.96,
+   "seconds": 0.35439224998117425
+  },
+  {
+   "id": "easy-fact-06",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.99,
+    "no": 0.010000000000000009
+   },
+   "confidence": 0.99,
+   "seconds": 1.3423172920010984
+  },
+  {
+   "id": "easy-fact-07",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.03,
+    "no": 0.97
+   },
+   "confidence": 0.97,
+   "seconds": 0.49721029101056047
+  },
+  {
+   "id": "easy-fact-08",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.99,
+    "no": 0.010000000000000009
+   },
+   "confidence": 0.99,
+   "seconds": 0.33924891700735316
+  },
+  {
+   "id": "easy-fact-09",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.02,
+    "no": 0.98
+   },
+   "confidence": 0.98,
+   "seconds": 0.2918971669860184
+  },
+  {
+   "id": "easy-fact-10",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.99,
+    "no": 0.010000000000000009
+   },
+   "confidence": 0.99,
+   "seconds": 0.37069658300606534
+  },
+  {
+   "id": "easy-fact-11",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.02,
+    "no": 0.98
+   },
+   "confidence": 0.98,
+   "seconds": 0.29965416598133743
+  },
+  {
+   "id": "easy-extraction-00",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "paypal",
+   "choice": "paypal",
+   "probabilities": {
+    "credit_card": 0.0,
+    "cash": 0.0,
+    "bank_transfer": 0.0,
+    "paypal": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.36989137501223013
+  },
+  {
+   "id": "easy-extraction-01",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "cash",
+   "choice": "cash",
+   "probabilities": {
+    "paypal": 0.0,
+    "credit_card": 0.0,
+    "bank_transfer": 0.0,
+    "cash": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3184410840040073
+  },
+  {
+   "id": "easy-extraction-02",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "bank_transfer",
+   "choice": "bank_transfer",
+   "probabilities": {
+    "credit_card": 0.0,
+    "paypal": 0.0,
+    "cash": 0.0,
+    "bank_transfer": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3059327079972718
+  },
+  {
+   "id": "easy-extraction-03",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "high",
+   "choice": "high",
+   "probabilities": {
+    "medium": 0.0,
+    "low": 0.0,
+    "high": 1.0,
+    "urgent": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3128375420055818
+  },
+  {
+   "id": "easy-extraction-04",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "low",
+   "choice": "low",
+   "probabilities": {
+    "low": 1.0,
+    "medium": 0.0,
+    "high": 0.0,
+    "urgent": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.32059183399542235
+  },
+  {
+   "id": "easy-extraction-05",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "urgent",
+   "choice": "urgent",
+   "probabilities": {
+    "low": 0.0,
+    "medium": 0.0,
+    "urgent": 1.0,
+    "high": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.298858999973163
+  },
+  {
+   "id": "easy-extraction-06",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "M",
+   "choice": "M",
+   "probabilities": {
+    "S": 0.0,
+    "M": 1.0,
+    "XL": 0.0,
+    "L": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.38783941700239666
+  },
+  {
+   "id": "easy-extraction-07",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "XL",
+   "choice": "XL",
+   "probabilities": {
+    "M": 0.0,
+    "XL": 1.0,
+    "L": 0.0,
+    "S": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3514370000048075
+  },
+  {
+   "id": "easy-extraction-08",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "thursday",
+   "choice": "thursday",
+   "probabilities": {
+    "wednesday": 0.0,
+    "monday": 0.0,
+    "tuesday": 0.0,
+    "thursday": 1.0,
+    "friday": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.38542400000733323
+  },
+  {
+   "id": "easy-extraction-09",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "monday",
+   "choice": "monday",
+   "probabilities": {
+    "monday": 1.0,
+    "wednesday": 0.0,
+    "tuesday": 0.0,
+    "friday": 0.0,
+    "thursday": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3610364159976598
+  },
+  {
+   "id": "easy-extraction-10",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "friday",
+   "choice": "friday",
+   "probabilities": {
+    "monday": 0.0,
+    "thursday": 0.0,
+    "friday": 1.0,
+    "tuesday": 0.0,
+    "wednesday": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3656625419971533
+  },
+  {
+   "id": "easy-extraction-11",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "credit_card",
+   "choice": "credit_card",
+   "probabilities": {
+    "cash": 0.0,
+    "paypal": 0.0,
+    "bank_transfer": 0.0,
+    "credit_card": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.4861510840128176
+  },
+  {
+   "id": "easy-tool_selection-00",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "get_weather",
+   "choice": "get_weather",
+   "probabilities": {
+    "translate_text": 0.0,
+    "get_weather": 1.0,
+    "create_calendar_event": 0.0,
+    "convert_currency": 0.0,
+    "send_email": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.377158999996027
+  },
+  {
+   "id": "easy-tool_selection-01",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "send_email",
+   "choice": "send_email",
+   "probabilities": {
+    "convert_currency": 0.0,
+    "translate_text": 0.0,
+    "get_weather": 0.0,
+    "send_email": 1.0,
+    "create_calendar_event": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3262075420061592
+  },
+  {
+   "id": "easy-tool_selection-02",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "create_calendar_event",
+   "choice": "create_calendar_event",
+   "probabilities": {
+    "create_calendar_event": 1.0,
+    "convert_currency": 0.0,
+    "translate_text": 0.0,
+    "get_weather": 0.0,
+    "send_email": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3814057919953484
+  },
+  {
+   "id": "easy-tool_selection-03",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "convert_currency",
+   "choice": "convert_currency",
+   "probabilities": {
+    "send_email": 0.0,
+    "translate_text": 0.0,
+    "create_calendar_event": 0.0,
+    "get_weather": 0.0,
+    "convert_currency": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.302360542002134
+  },
+  {
+   "id": "easy-tool_selection-04",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "translate_text",
+   "choice": "translate_text",
+   "probabilities": {
+    "get_weather": 0.0,
+    "convert_currency": 0.0,
+    "send_email": 0.0,
+    "translate_text": 1.0,
+    "create_calendar_event": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.34890737500973046
+  },
+  {
+   "id": "easy-tool_selection-05",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "create_calendar_event",
+   "choice": "create_calendar_event",
+   "probabilities": {
+    "convert_currency": 0.0,
+    "translate_text": 0.0,
+    "send_email": 0.0,
+    "get_weather": 0.0,
+    "create_calendar_event": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.33300791602232493
+  },
+  {
+   "id": "easy-tool_selection-06",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "search_flights",
+   "choice": "search_flights",
+   "probabilities": {
+    "get_stock_price": 0.0,
+    "book_restaurant": 0.0,
+    "set_reminder": 0.0,
+    "search_flights": 1.0,
+    "call_taxi": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.33781624998664483
+  },
+  {
+   "id": "easy-tool_selection-07",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "book_restaurant",
+   "choice": "book_restaurant",
+   "probabilities": {
+    "book_restaurant": 1.0,
+    "search_flights": 0.0,
+    "get_stock_price": 0.0,
+    "call_taxi": 0.0,
+    "set_reminder": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3319715000106953
+  },
+  {
+   "id": "easy-tool_selection-08",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "set_reminder",
+   "choice": "set_reminder",
+   "probabilities": {
+    "get_stock_price": 0.0,
+    "set_reminder": 1.0,
+    "book_restaurant": 0.0,
+    "call_taxi": 0.0,
+    "search_flights": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.34646487500867806
+  },
+  {
+   "id": "easy-tool_selection-09",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "get_stock_price",
+   "choice": "get_stock_price",
+   "probabilities": {
+    "search_flights": 0.0,
+    "book_restaurant": 0.0,
+    "call_taxi": 0.0,
+    "set_reminder": 0.0,
+    "get_stock_price": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3007898749783635
+  },
+  {
+   "id": "easy-tool_selection-10",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "call_taxi",
+   "choice": "call_taxi",
+   "probabilities": {
+    "search_flights": 0.0,
+    "get_stock_price": 0.0,
+    "book_restaurant": 0.0,
+    "call_taxi": 1.0,
+    "set_reminder": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.5383799999835901
+  },
+  {
+   "id": "easy-tool_selection-11",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "set_reminder",
+   "choice": "set_reminder",
+   "probabilities": {
+    "set_reminder": 1.0,
+    "search_flights": 0.0,
+    "call_taxi": 0.0,
+    "book_restaurant": 0.0,
+    "get_stock_price": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.36178341699996963
+  }
+ ]
+}

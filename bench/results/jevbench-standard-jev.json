@@ -1,0 +1,1095 @@
+{
+ "date": "2026-09-22",
+ "tier": "standard",
+ "model": "Jev (api.typesafe.ai)",
+ "mode": "hosted",
+ "orders": "auto",
+ "accuracy": 0.9861111111111112,
+ "ece": 0.03805555555555558,
+ "by_family": {
+  "adequacy": 1.0,
+  "extraction": 1.0,
+  "intent": 1.0,
+  "ordinal": 1.0,
+  "policy": 0.9166666666666666,
+  "routing": 1.0
+ },
+ "n_by_family": {
+  "adequacy": 12,
+  "extraction": 12,
+  "intent": 12,
+  "ordinal": 12,
+  "policy": 12,
+  "routing": 12
+ },
+ "items": [
+  {
+   "id": "original-policy-01-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.04,
+    "no": 0.96
+   },
+   "confidence": 0.96,
+   "seconds": 0.388275875011459
+  },
+  {
+   "id": "original-policy-01-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.04,
+    "no": 0.96
+   },
+   "confidence": 0.96,
+   "seconds": 0.3734137080027722
+  },
+  {
+   "id": "original-policy-02-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.89,
+    "no": 0.10999999999999999
+   },
+   "confidence": 0.89,
+   "seconds": 1.4347514580003917
+  },
+  {
+   "id": "original-policy-02-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.91,
+    "no": 0.08999999999999997
+   },
+   "confidence": 0.91,
+   "seconds": 0.35395020799478516
+  },
+  {
+   "id": "original-policy-03-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.51,
+    "no": 0.49
+   },
+   "confidence": 0.51,
+   "seconds": 0.35044624999864027
+  },
+  {
+   "id": "original-policy-03-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.72,
+    "no": 0.28
+   },
+   "confidence": 0.72,
+   "seconds": 0.2954026669904124
+  },
+  {
+   "id": "original-policy-04-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.04,
+    "no": 0.96
+   },
+   "confidence": 0.96,
+   "seconds": 0.3435318330011796
+  },
+  {
+   "id": "original-policy-04-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.07,
+    "no": 0.9299999999999999
+   },
+   "confidence": 0.9299999999999999,
+   "seconds": 0.44670299999415874
+  },
+  {
+   "id": "original-policy-05-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.07,
+    "no": 0.9299999999999999
+   },
+   "confidence": 0.9299999999999999,
+   "seconds": 0.3349163749953732
+  },
+  {
+   "id": "original-policy-05-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.05,
+    "no": 0.95
+   },
+   "confidence": 0.95,
+   "seconds": 0.45488358300644904
+  },
+  {
+   "id": "original-policy-06-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.84,
+    "no": 0.16000000000000003
+   },
+   "confidence": 0.84,
+   "seconds": 0.3584125000052154
+  },
+  {
+   "id": "original-policy-06-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.34,
+    "no": 0.6599999999999999
+   },
+   "confidence": 0.6599999999999999,
+   "seconds": 0.3787462920008693
+  },
+  {
+   "id": "original-intent-01-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "refund",
+   "choice": "refund",
+   "probabilities": {
+    "refund": 0.98,
+    "other": 0.0,
+    "status": 0.0,
+    "change_address": 0.0,
+    "cancel": 0.02
+   },
+   "confidence": 0.97,
+   "seconds": 0.30490379099501297
+  },
+  {
+   "id": "original-intent-01-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "refund",
+   "choice": "refund",
+   "probabilities": {
+    "other": 0.0,
+    "refund": 1.0,
+    "cancel": 0.0,
+    "status": 0.0,
+    "change_address": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3206452500016894
+  },
+  {
+   "id": "original-intent-02-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "status",
+   "choice": "status",
+   "probabilities": {
+    "change_address": 0.0,
+    "other": 0.01,
+    "cancel": 0.0,
+    "refund": 0.0,
+    "status": 0.99
+   },
+   "confidence": 0.98,
+   "seconds": 0.44384937500581145
+  },
+  {
+   "id": "original-intent-02-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "status",
+   "choice": "status",
+   "probabilities": {
+    "refund": 0.0,
+    "cancel": 0.0,
+    "change_address": 0.0,
+    "status": 1.0,
+    "other": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.4288904159911908
+  },
+  {
+   "id": "original-intent-03-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "change_address",
+   "choice": "change_address",
+   "probabilities": {
+    "other": 0.0,
+    "refund": 0.0,
+    "cancel": 0.0,
+    "status": 0.0,
+    "change_address": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3640772079816088
+  },
+  {
+   "id": "original-intent-03-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "change_address",
+   "choice": "change_address",
+   "probabilities": {
+    "status": 0.0,
+    "refund": 0.0,
+    "change_address": 1.0,
+    "cancel": 0.0,
+    "other": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3315184170205612
+  },
+  {
+   "id": "original-intent-04-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "cancel",
+   "choice": "cancel",
+   "probabilities": {
+    "other": 0.01,
+    "change_address": 0.0,
+    "refund": 0.0,
+    "cancel": 0.99,
+    "status": 0.0
+   },
+   "confidence": 0.99,
+   "seconds": 0.34992624999722466
+  },
+  {
+   "id": "original-intent-04-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "cancel",
+   "choice": "cancel",
+   "probabilities": {
+    "change_address": 0.0,
+    "status": 0.0,
+    "refund": 0.0,
+    "cancel": 1.0,
+    "other": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.35777416700148024
+  },
+  {
+   "id": "original-intent-05-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "other",
+   "choice": "other",
+   "probabilities": {
+    "change_address": 0.0,
+    "status": 0.0,
+    "refund": 0.04,
+    "other": 0.96,
+    "cancel": 0.0
+   },
+   "confidence": 0.95,
+   "seconds": 0.3066071249777451
+  },
+  {
+   "id": "original-intent-05-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "other",
+   "choice": "other",
+   "probabilities": {
+    "cancel": 0.0,
+    "other": 0.98,
+    "change_address": 0.0,
+    "status": 0.0,
+    "refund": 0.02
+   },
+   "confidence": 0.98,
+   "seconds": 0.31913545800489374
+  },
+  {
+   "id": "original-intent-06-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "status",
+   "choice": "status",
+   "probabilities": {
+    "change_address": 0.0,
+    "refund": 0.0,
+    "cancel": 0.01,
+    "status": 0.99,
+    "other": 0.0
+   },
+   "confidence": 0.99,
+   "seconds": 0.3365408749959897
+  },
+  {
+   "id": "original-intent-06-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "status",
+   "choice": "status",
+   "probabilities": {
+    "cancel": 0.0,
+    "refund": 0.0,
+    "change_address": 0.0,
+    "status": 1.0,
+    "other": 0.0
+   },
+   "confidence": 0.99,
+   "seconds": 0.3119757499953266
+  },
+  {
+   "id": "original-ordinal-01-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "0",
+   "choice": "0",
+   "probabilities": {
+    "0": 1.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "confidence": 0.99,
+   "seconds": 0.3190810839878395
+  },
+  {
+   "id": "original-ordinal-01-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "0",
+   "choice": "0",
+   "probabilities": {
+    "0": 1.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.31283016700763255
+  },
+  {
+   "id": "original-ordinal-02-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "1",
+   "choice": "1",
+   "probabilities": {
+    "0": 0.0,
+    "1": 1.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3350302090111654
+  },
+  {
+   "id": "original-ordinal-02-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "1",
+   "choice": "1",
+   "probabilities": {
+    "0": 0.0,
+    "1": 1.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.37033920898102224
+  },
+  {
+   "id": "original-ordinal-03-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "2",
+   "choice": "2",
+   "probabilities": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 1.0,
+    "3": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3848801249987446
+  },
+  {
+   "id": "original-ordinal-03-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "2",
+   "choice": "2",
+   "probabilities": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 1.0,
+    "3": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3052639589877799
+  },
+  {
+   "id": "original-ordinal-04-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "3",
+   "choice": "3",
+   "probabilities": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.32995170800131746
+  },
+  {
+   "id": "original-ordinal-04-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "3",
+   "choice": "3",
+   "probabilities": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3509962089883629
+  },
+  {
+   "id": "original-ordinal-05-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "0",
+   "choice": "0",
+   "probabilities": {
+    "0": 0.99,
+    "1": 0.01,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "confidence": 0.98,
+   "seconds": 0.33516254200367257
+  },
+  {
+   "id": "original-ordinal-05-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "0",
+   "choice": "0",
+   "probabilities": {
+    "0": 0.98,
+    "1": 0.01,
+    "2": 0.01,
+    "3": 0.0
+   },
+   "confidence": 0.98,
+   "seconds": 0.3122777089884039
+  },
+  {
+   "id": "original-ordinal-06-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "2",
+   "choice": "2",
+   "probabilities": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 1.0,
+    "3": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3354768329882063
+  },
+  {
+   "id": "original-ordinal-06-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "2",
+   "choice": "2",
+   "probabilities": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 1.0,
+    "3": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3948118750122376
+  },
+  {
+   "id": "original-extraction-01-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "pickup",
+   "choice": "pickup",
+   "probabilities": {
+    "unknown": 0.0,
+    "pickup": 1.0,
+    "courier": 0.0,
+    "post": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.31939679200877436
+  },
+  {
+   "id": "original-extraction-01-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "pickup",
+   "choice": "pickup",
+   "probabilities": {
+    "unknown": 0.0,
+    "post": 0.0,
+    "pickup": 1.0,
+    "courier": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3511598340119235
+  },
+  {
+   "id": "original-extraction-02-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "unknown",
+   "choice": "unknown",
+   "probabilities": {
+    "pickup": 0.0,
+    "courier": 0.0,
+    "post": 0.0,
+    "unknown": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3583711250103079
+  },
+  {
+   "id": "original-extraction-02-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "unknown",
+   "choice": "unknown",
+   "probabilities": {
+    "unknown": 1.0,
+    "courier": 0.0,
+    "pickup": 0.0,
+    "post": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3410898750007618
+  },
+  {
+   "id": "original-extraction-03-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "courier",
+   "choice": "courier",
+   "probabilities": {
+    "unknown": 0.01,
+    "post": 0.0,
+    "pickup": 0.0,
+    "courier": 0.99
+   },
+   "confidence": 0.99,
+   "seconds": 0.3876994579914026
+  },
+  {
+   "id": "original-extraction-03-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "courier",
+   "choice": "courier",
+   "probabilities": {
+    "post": 0.0,
+    "courier": 1.0,
+    "unknown": 0.0,
+    "pickup": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.30921500001568347
+  },
+  {
+   "id": "original-extraction-04-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "post",
+   "choice": "post",
+   "probabilities": {
+    "unknown": 0.01,
+    "courier": 0.0,
+    "pickup": 0.0,
+    "post": 0.99
+   },
+   "confidence": 0.99,
+   "seconds": 0.3580560830014292
+  },
+  {
+   "id": "original-extraction-04-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "post",
+   "choice": "post",
+   "probabilities": {
+    "pickup": 0.0,
+    "post": 1.0,
+    "courier": 0.0,
+    "unknown": 0.0
+   },
+   "confidence": 0.99,
+   "seconds": 0.3338380000204779
+  },
+  {
+   "id": "original-extraction-05-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "unknown",
+   "choice": "unknown",
+   "probabilities": {
+    "unknown": 1.0,
+    "pickup": 0.0,
+    "courier": 0.0,
+    "post": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3484396249987185
+  },
+  {
+   "id": "original-extraction-05-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "unknown",
+   "choice": "unknown",
+   "probabilities": {
+    "unknown": 1.0,
+    "courier": 0.0,
+    "pickup": 0.0,
+    "post": 0.0
+   },
+   "confidence": 0.99,
+   "seconds": 0.30167416599579155
+  },
+  {
+   "id": "original-extraction-06-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "courier",
+   "choice": "courier",
+   "probabilities": {
+    "courier": 1.0,
+    "unknown": 0.0,
+    "post": 0.0,
+    "pickup": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.31721245902008377
+  },
+  {
+   "id": "original-extraction-06-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "courier",
+   "choice": "courier",
+   "probabilities": {
+    "unknown": 0.0,
+    "pickup": 0.0,
+    "post": 0.0,
+    "courier": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.28314816698548384
+  },
+  {
+   "id": "original-adequacy-01-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.93,
+    "no": 0.06999999999999995
+   },
+   "confidence": 0.93,
+   "seconds": 0.43898120798985474
+  },
+  {
+   "id": "original-adequacy-01-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.93,
+    "no": 0.06999999999999995
+   },
+   "confidence": 0.93,
+   "seconds": 0.3854731250030454
+  },
+  {
+   "id": "original-adequacy-02-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.03,
+    "no": 0.97
+   },
+   "confidence": 0.97,
+   "seconds": 0.38137504100450315
+  },
+  {
+   "id": "original-adequacy-02-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.03,
+    "no": 0.97
+   },
+   "confidence": 0.97,
+   "seconds": 0.3244328339933418
+  },
+  {
+   "id": "original-adequacy-03-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.03,
+    "no": 0.97
+   },
+   "confidence": 0.97,
+   "seconds": 0.35354504198767245
+  },
+  {
+   "id": "original-adequacy-03-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.19,
+    "no": 0.81
+   },
+   "confidence": 0.81,
+   "seconds": 0.40092270899913274
+  },
+  {
+   "id": "original-adequacy-04-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.98,
+    "no": 0.020000000000000018
+   },
+   "confidence": 0.98,
+   "seconds": 0.2947347909794189
+  },
+  {
+   "id": "original-adequacy-04-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.92,
+    "no": 0.07999999999999996
+   },
+   "confidence": 0.92,
+   "seconds": 0.36904941697139293
+  },
+  {
+   "id": "original-adequacy-05-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.32,
+    "no": 0.6799999999999999
+   },
+   "confidence": 0.6799999999999999,
+   "seconds": 0.35525766701903194
+  },
+  {
+   "id": "original-adequacy-05-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "yes": 0.03,
+    "no": 0.97
+   },
+   "confidence": 0.97,
+   "seconds": 0.29863495801691897
+  },
+  {
+   "id": "original-adequacy-06-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.96,
+    "no": 0.040000000000000036
+   },
+   "confidence": 0.96,
+   "seconds": 0.2999934999970719
+  },
+  {
+   "id": "original-adequacy-06-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "yes": 0.82,
+    "no": 0.18000000000000005
+   },
+   "confidence": 0.82,
+   "seconds": 0.3302119159779977
+  },
+  {
+   "id": "original-routing-01-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "math",
+   "choice": "math",
+   "probabilities": {
+    "document": 0.0,
+    "general": 0.0,
+    "tools": 0.0,
+    "math": 1.0,
+    "coding_agent": 0.0,
+    "coding": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.31725733299390413
+  },
+  {
+   "id": "original-routing-01-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "math",
+   "choice": "math",
+   "probabilities": {
+    "tools": 0.0,
+    "document": 0.0,
+    "general": 0.0,
+    "coding_agent": 0.0,
+    "coding": 0.0,
+    "math": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3461649579985533
+  },
+  {
+   "id": "original-routing-02-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "coding",
+   "choice": "coding",
+   "probabilities": {
+    "coding_agent": 0.0,
+    "math": 0.0,
+    "general": 0.0,
+    "document": 0.0,
+    "coding": 1.0,
+    "tools": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.40888354199705645
+  },
+  {
+   "id": "original-routing-02-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "coding",
+   "choice": "coding",
+   "probabilities": {
+    "coding": 1.0,
+    "math": 0.0,
+    "coding_agent": 0.0,
+    "tools": 0.0,
+    "general": 0.0,
+    "document": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.309165959013626
+  },
+  {
+   "id": "original-routing-03-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "coding_agent",
+   "choice": "coding_agent",
+   "probabilities": {
+    "document": 0.0,
+    "math": 0.0,
+    "coding": 0.0,
+    "tools": 0.0,
+    "coding_agent": 1.0,
+    "general": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3518100829969626
+  },
+  {
+   "id": "original-routing-03-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "coding_agent",
+   "choice": "coding_agent",
+   "probabilities": {
+    "coding": 0.0,
+    "document": 0.0,
+    "math": 0.0,
+    "general": 0.0,
+    "tools": 0.0,
+    "coding_agent": 1.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.3370329169847537
+  },
+  {
+   "id": "original-routing-04-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "document",
+   "choice": "document",
+   "probabilities": {
+    "coding_agent": 0.01,
+    "math": 0.0,
+    "general": 0.0,
+    "tools": 0.0,
+    "document": 0.99,
+    "coding": 0.0
+   },
+   "confidence": 0.98,
+   "seconds": 0.3355988750117831
+  },
+  {
+   "id": "original-routing-04-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "document",
+   "choice": "document",
+   "probabilities": {
+    "tools": 0.0,
+    "coding": 0.0,
+    "coding_agent": 0.01,
+    "document": 0.99,
+    "general": 0.0,
+    "math": 0.0
+   },
+   "confidence": 0.99,
+   "seconds": 0.36520629198639654
+  },
+  {
+   "id": "original-routing-05-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "tools",
+   "choice": "tools",
+   "probabilities": {
+    "general": 0.0,
+    "coding": 0.0,
+    "coding_agent": 0.0,
+    "tools": 1.0,
+    "document": 0.0,
+    "math": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.41112345800502226
+  },
+  {
+   "id": "original-routing-05-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "tools",
+   "choice": "tools",
+   "probabilities": {
+    "coding": 0.0,
+    "tools": 0.99,
+    "math": 0.0,
+    "coding_agent": 0.0,
+    "general": 0.01,
+    "document": 0.0
+   },
+   "confidence": 0.99,
+   "seconds": 0.33117045799735934
+  },
+  {
+   "id": "original-routing-06-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "general",
+   "choice": "general",
+   "probabilities": {
+    "math": 0.0,
+    "coding_agent": 0.0,
+    "general": 1.0,
+    "tools": 0.0,
+    "document": 0.0,
+    "coding": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.41185779200168326
+  },
+  {
+   "id": "original-routing-06-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "general",
+   "choice": "general",
+   "probabilities": {
+    "coding": 0.0,
+    "document": 0.0,
+    "general": 1.0,
+    "tools": 0.0,
+    "coding_agent": 0.0,
+    "math": 0.0
+   },
+   "confidence": 1.0,
+   "seconds": 0.4166300829965621
+  }
+ ]
+}

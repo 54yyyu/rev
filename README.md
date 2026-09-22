@@ -103,6 +103,11 @@ single-token samples at temperature 1 and counts the letters, and re-tests the
 exact path every five minutes. We patched our server so DSpark answers; the
 patch is small and we will publish it if anyone asks.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/charts/accuracy-dark.png">
+  <img alt="Accuracy per tier and per hard family: rev on Qwen3.8-27B, Jev, and rev on Qwen3.5-2B" src="docs/charts/accuracy-light.png">
+</picture>
+
 JevBench public items, Qwen3.8-27B (INT4 AWQ, 2x L40S, DSpark) read exactly,
 2026-09-22:
 
@@ -111,7 +116,7 @@ JevBench public items, Qwen3.8-27B (INT4 AWQ, 2x L40S, DSpark) read exactly,
 | rev, Qwen3.5-2B on this laptop | 1.000 | 0.764 | 0.550 |
 | rev, Qwen3.8-27B via sglang, 32 samples | 1.000 | 0.986 | 0.784 |
 | **rev, Qwen3.8-27B via sglang, exact** | **1.000** | **0.986** | **0.784** |
-| Jev 1.13.0 (commercial) | 1.000 | 0.986 | 0.730 |
+| Jev 1.13.0 (commercial) | 1.000 | 0.986 | 0.730 (0.721 measured 2026-09-22) |
 
 `docs/JEVBENCH.md` is why this is not on the public leaderboard.
 
@@ -119,6 +124,11 @@ Standard equals Jev and hard is above it; `temporal_numeric` is still the weak
 family (0.400, Jev 0.267). At the 0.9 gate, standard answers 78% of items at
 1.000 and hard 35% at 1.000, and the confidences are the model's own rather
 than a sample fraction.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/charts/latency-dark.png">
+  <img alt="Latency per request kind, median with the p95 reach, for the three systems" src="docs/charts/latency-light.png">
+</picture>
 
 Speed, same client and items. The laptop talks to `rev serve` on the always-on
 host, which talks to the cluster over an ssh relay, so every number includes
@@ -141,6 +151,10 @@ two L40S reading 1-4k tokens are the limit. With 64 samples per reading
 instead of exact log-probabilities, the same rows were 1189 / 1085 / 2037 /
 4984 ms at p50 and 0.2-0.7 per second in flight
 (`bench/results/speed-remote-64.json`).
+
+The charts are drawn from `bench/results/` by `python bench/plot_readme.py`;
+every number in them was written by `bench/jevbench.py --out` or
+`bench/speed.py --label`, never by hand.
 
 The endpoint keeps serving coding agents at the same time: their decode speed
 with thinking on was the same before and after rev started using it (code
@@ -238,6 +252,11 @@ the second reading did not help (0.927-0.936, inside the interval) and doubled
 the time.
 
 ## Gating
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/charts/gate-dark.png">
+  <img alt="Coverage against accuracy on the hard tier when items are answered most-confident first" src="docs/charts/gate-light.png">
+</picture>
 
 The number you act on is not accuracy, it is what a confidence gate buys. On the
 standard tier:

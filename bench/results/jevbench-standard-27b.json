@@ -1,0 +1,1095 @@
+{
+ "date": "2026-09-22",
+ "tier": "standard",
+ "model": "qwen38-27b +DSPARK via http://oracle.tail0ade1a.ts.net:30002",
+ "mode": "undecided",
+ "orders": "auto",
+ "accuracy": 0.9861111111111112,
+ "ece": 0.058356781821090394,
+ "by_family": {
+  "adequacy": 1.0,
+  "extraction": 1.0,
+  "intent": 1.0,
+  "ordinal": 1.0,
+  "policy": 0.9166666666666666,
+  "routing": 1.0
+ },
+ "n_by_family": {
+  "adequacy": 12,
+  "extraction": 12,
+  "intent": 12,
+  "ordinal": 12,
+  "policy": 12,
+  "routing": 12
+ },
+ "items": [
+  {
+   "id": "original-policy-01-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.993307150493565,
+    "yes": 0.006692849506434881
+   },
+   "confidence": 0.993307150493565,
+   "seconds": 0.1445166670018807
+  },
+  {
+   "id": "original-policy-01-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.994779874715104,
+    "yes": 0.005220125284895911
+   },
+   "confidence": 0.994779874715104,
+   "seconds": 0.12766929200734012
+  },
+  {
+   "id": "original-policy-02-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.06754669207816587,
+    "yes": 0.9324533079218341
+   },
+   "confidence": 0.9324533079218341,
+   "seconds": 0.12437962499097921
+  },
+  {
+   "id": "original-policy-02-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.36296919862864757,
+    "yes": 0.6370308013713525
+   },
+   "confidence": 0.5926665999540697,
+   "seconds": 0.2589297920058016
+  },
+  {
+   "id": "original-policy-03-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.3923368230619772,
+    "yes": 0.6076631769380227
+   },
+   "confidence": 0.5312093733737563,
+   "seconds": 0.43721616599941626
+  },
+  {
+   "id": "original-policy-03-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.46879062662624377,
+    "yes": 0.5312093733737563
+   },
+   "confidence": 0.4378234991142019,
+   "seconds": 1.4024417909968179
+  },
+  {
+   "id": "original-policy-04-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.9399133447766225,
+    "yes": 0.06008665522337757
+   },
+   "confidence": 0.9399133447766225,
+   "seconds": 0.14061704199411906
+  },
+  {
+   "id": "original-policy-04-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.962673113860638,
+    "yes": 0.03732688613936196
+   },
+   "confidence": 0.962673113860638,
+   "seconds": 0.13230962501256727
+  },
+  {
+   "id": "original-policy-05-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.9579122743372327,
+    "yes": 0.04208772566276722
+   },
+   "confidence": 0.9579122743372327,
+   "seconds": 0.12878091700258665
+  },
+  {
+   "id": "original-policy-05-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.9669140206578809,
+    "yes": 0.03308597934211908
+   },
+   "confidence": 0.9669140206578809,
+   "seconds": 0.12533758400240913
+  },
+  {
+   "id": "original-policy-06-0",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.06008664933244599,
+    "yes": 0.939913350667554
+   },
+   "confidence": 0.939913350667554,
+   "seconds": 0.12906437501078472
+  },
+  {
+   "id": "original-policy-06-1",
+   "family": "policy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.6224593382055109,
+    "yes": 0.3775406617944891
+   },
+   "confidence": 0.5926665999540697,
+   "seconds": 0.2500140000192914
+  },
+  {
+   "id": "original-intent-01-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "refund",
+   "choice": "refund",
+   "probabilities": {
+    "cancel": 0.025525893173735353,
+    "refund": 0.9578520354949214,
+    "status": 0.0008734480326298247,
+    "change_address": 0.0002663864722936729,
+    "other": 0.01548223682641991
+   },
+   "confidence": 0.9578520354949214,
+   "seconds": 0.13263470900710672
+  },
+  {
+   "id": "original-intent-01-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "refund",
+   "choice": "refund",
+   "probabilities": {
+    "cancel": 0.005896416879761617,
+    "refund": 0.9916246517885895,
+    "status": 0.00020176419419789976,
+    "change_address": 0.00010799659081035077,
+    "other": 0.0021691705466405633
+   },
+   "confidence": 0.9916246517885895,
+   "seconds": 0.13198662499780767
+  },
+  {
+   "id": "original-intent-02-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "status",
+   "choice": "status",
+   "probabilities": {
+    "cancel": 0.003115164651704888,
+    "refund": 0.0022791031459294185,
+    "status": 0.8637488260793577,
+    "change_address": 0.01396120103615404,
+    "other": 0.11689570508685393
+   },
+   "confidence": 0.828533303386813,
+   "seconds": 0.2645156250218861
+  },
+  {
+   "id": "original-intent-02-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "status",
+   "choice": "status",
+   "probabilities": {
+    "cancel": 0.005213526960372823,
+    "refund": 0.00048493354720510116,
+    "status": 0.9935224787406631,
+    "change_address": 0.0002941272045538444,
+    "other": 0.00048493354720510116
+   },
+   "confidence": 0.9935224787406631,
+   "seconds": 0.13199654201162048
+  },
+  {
+   "id": "original-intent-03-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "change_address",
+   "choice": "change_address",
+   "probabilities": {
+    "cancel": 0.00043031262408532137,
+    "refund": 0.0002609977997691444,
+    "status": 9.019842604315311e-05,
+    "change_address": 0.9990021163743129,
+    "other": 0.00021637477578963847
+   },
+   "confidence": 0.9990021163743129,
+   "seconds": 0.13284825001028366
+  },
+  {
+   "id": "original-intent-03-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "change_address",
+   "choice": "change_address",
+   "probabilities": {
+    "cancel": 0.00015840277577266166,
+    "refund": 0.00015840277577266166,
+    "status": 3.1191355934389127e-05,
+    "change_address": 0.9996305656079957,
+    "other": 2.1437484524658817e-05
+   },
+   "confidence": 0.9996305656079957,
+   "seconds": 0.1320261670043692
+  },
+  {
+   "id": "original-intent-04-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "cancel",
+   "choice": "cancel",
+   "probabilities": {
+    "cancel": 0.9977384441661641,
+    "refund": 0.0015000391364821779,
+    "status": 0.0001395253740758945,
+    "change_address": 7.015776401356785e-05,
+    "other": 0.0005518335592643565
+   },
+   "confidence": 0.9977384441661641,
+   "seconds": 0.13532029098132625
+  },
+  {
+   "id": "original-intent-04-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "cancel",
+   "choice": "cancel",
+   "probabilities": {
+    "cancel": 0.9905885242793514,
+    "refund": 0.005890255345450708,
+    "status": 0.0004266886660941502,
+    "change_address": 0.00031217209680887536,
+    "other": 0.0027823596122948857
+   },
+   "confidence": 0.9905885242793514,
+   "seconds": 0.13269545798539184
+  },
+  {
+   "id": "original-intent-05-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "other",
+   "choice": "other",
+   "probabilities": {
+    "cancel": 0.0015002792501682604,
+    "refund": 0.00048706936029366054,
+    "status": 3.998108776944839e-05,
+    "change_address": 7.469450559901483e-05,
+    "other": 0.9978979757961696
+   },
+   "confidence": 0.9978979757961696,
+   "seconds": 0.13565495802322403
+  },
+  {
+   "id": "original-intent-05-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "other",
+   "choice": "other",
+   "probabilities": {
+    "cancel": 0.00070935585806206,
+    "refund": 0.00023029412955494712,
+    "status": 5.46996502847666e-05,
+    "change_address": 0.0001582786862116143,
+    "other": 0.9988473716758866
+   },
+   "confidence": 0.9988473716758866,
+   "seconds": 0.13530362499295734
+  },
+  {
+   "id": "original-intent-06-0",
+   "family": "intent",
+   "type": "choice",
+   "gold": "status",
+   "choice": "status",
+   "probabilities": {
+    "cancel": 0.032074730756937564,
+    "refund": 0.004918818099052405,
+    "status": 0.937360936073078,
+    "change_address": 0.0006656896406246341,
+    "other": 0.02497982543030745
+   },
+   "confidence": 0.937360936073078,
+   "seconds": 0.1346565000130795
+  },
+  {
+   "id": "original-intent-06-1",
+   "family": "intent",
+   "type": "choice",
+   "gold": "status",
+   "choice": "status",
+   "probabilities": {
+    "cancel": 0.005884411754559601,
+    "refund": 0.001158709376181582,
+    "status": 0.9896058268259199,
+    "change_address": 0.00020135340159927207,
+    "other": 0.0031496986417395103
+   },
+   "confidence": 0.9896058268259199,
+   "seconds": 0.1399762500077486
+  },
+  {
+   "id": "original-ordinal-01-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "0",
+   "choice": "0",
+   "probabilities": {
+    "0": 0.9800970020826315,
+    "1": 0.017951101161122845,
+    "2": 0.001473516114108237,
+    "3": 0.00047838064213752673
+   },
+   "confidence": 0.9800970020826315,
+   "seconds": 0.13746033399365842
+  },
+  {
+   "id": "original-ordinal-01-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "0",
+   "choice": "0",
+   "probabilities": {
+    "0": 0.999380665726231,
+    "1": 0.000487793047083153,
+    "2": 0.00010224697724176046,
+    "3": 2.9294249444219066e-05
+   },
+   "confidence": 0.999380665726231,
+   "seconds": 0.13426695900852792
+  },
+  {
+   "id": "original-ordinal-02-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "1",
+   "choice": "1",
+   "probabilities": {
+    "0": 0.0008037944436462392,
+    "1": 0.9988337023185895,
+    "2": 0.0002777839266968944,
+    "3": 8.471931106744879e-05
+   },
+   "confidence": 0.9988337023185895,
+   "seconds": 0.1334511669992935
+  },
+  {
+   "id": "original-ordinal-02-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "1",
+   "choice": "1",
+   "probabilities": {
+    "0": 0.0011690963197239286,
+    "1": 0.9984771048819684,
+    "2": 0.00024505590129057607,
+    "3": 0.00010874289701718777
+   },
+   "confidence": 0.9984771048819684,
+   "seconds": 0.13461304098018445
+  },
+  {
+   "id": "original-ordinal-03-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "2",
+   "choice": "2",
+   "probabilities": {
+    "0": 0.004060095582736586,
+    "1": 0.001917853354216302,
+    "2": 0.9934725768773897,
+    "3": 0.0005494741856573759
+   },
+   "confidence": 0.9934725768773897,
+   "seconds": 0.13589954198687337
+  },
+  {
+   "id": "original-ordinal-03-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "2",
+   "choice": "2",
+   "probabilities": {
+    "0": 0.00459703164286976,
+    "1": 0.0021714839899837518,
+    "2": 0.9926824472328225,
+    "3": 0.00054903713432397
+   },
+   "confidence": 0.9926824472328225,
+   "seconds": 0.1340872919827234
+  },
+  {
+   "id": "original-ordinal-04-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "3",
+   "choice": "3",
+   "probabilities": {
+    "0": 0.00043047087894016166,
+    "1": 0.00014876675501540216,
+    "2": 5.141241482420723e-05,
+    "3": 0.9993693499512202
+   },
+   "confidence": 0.9993693499512202,
+   "seconds": 0.1355882920033764
+  },
+  {
+   "id": "original-ordinal-04-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "3",
+   "choice": "3",
+   "probabilities": {
+    "0": 0.00048771901258434585,
+    "1": 0.00020331153262151825,
+    "2": 7.961794014287012e-05,
+    "3": 0.9992293515146513
+   },
+   "confidence": 0.9992293515146513,
+   "seconds": 0.13639979201252572
+  },
+  {
+   "id": "original-ordinal-05-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "0",
+   "choice": "0",
+   "probabilities": {
+    "0": 0.9888337683093251,
+    "1": 0.008555088879888508,
+    "2": 0.0007022444589329799,
+    "3": 0.0019088983518535736
+   },
+   "confidence": 0.9888337683093251,
+   "seconds": 0.13571883298573084
+  },
+  {
+   "id": "original-ordinal-05-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "0",
+   "choice": "0",
+   "probabilities": {
+    "0": 0.8611288923373227,
+    "1": 0.10284717354190943,
+    "2": 0.02025180923215385,
+    "3": 0.01577212488861413
+   },
+   "confidence": 0.8611288923373227,
+   "seconds": 0.13431379100074992
+  },
+  {
+   "id": "original-ordinal-06-0",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "2",
+   "choice": "2",
+   "probabilities": {
+    "0": 0.00585747041469778,
+    "1": 0.008522569164765386,
+    "2": 0.9850751308018469,
+    "3": 0.0005448296186896872
+   },
+   "confidence": 0.9850751308018469,
+   "seconds": 0.1350416660134215
+  },
+  {
+   "id": "original-ordinal-06-1",
+   "family": "ordinal",
+   "type": "score",
+   "gold": "2",
+   "choice": "2",
+   "probabilities": {
+    "0": 0.005894270705384629,
+    "1": 0.0027842563340248865,
+    "2": 0.9912636875914612,
+    "3": 5.778536912912332e-05
+   },
+   "confidence": 0.9912636875914612,
+   "seconds": 0.133533999993233
+  },
+  {
+   "id": "original-extraction-01-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "pickup",
+   "choice": "pickup",
+   "probabilities": {
+    "courier": 0.06483372557990523,
+    "pickup": 0.7898364820965824,
+    "post": 0.01639253297013909,
+    "unknown": 0.1289372593533734
+   },
+   "confidence": 0.6308803751577879,
+   "seconds": 0.2633622919966001
+  },
+  {
+   "id": "original-extraction-01-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "pickup",
+   "choice": "pickup",
+   "probabilities": {
+    "courier": 0.020960452081950732,
+    "pickup": 0.8912610054490352,
+    "post": 0.009901015313551219,
+    "unknown": 0.07787752715546299
+   },
+   "confidence": 0.8686469650073503,
+   "seconds": 0.2658832920133136
+  },
+  {
+   "id": "original-extraction-02-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "unknown",
+   "choice": "unknown",
+   "probabilities": {
+    "courier": 0.0031681625309610694,
+    "pickup": 0.0008010369337719393,
+    "post": 0.0006238481912907035,
+    "unknown": 0.9954069523439762
+   },
+   "confidence": 0.9954069523439762,
+   "seconds": 0.13080229199840687
+  },
+  {
+   "id": "original-extraction-02-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "unknown",
+   "choice": "unknown",
+   "probabilities": {
+    "courier": 0.001324147872058111,
+    "pickup": 0.00023010250716045286,
+    "post": 0.0004298878738109741,
+    "unknown": 0.9980158617469704
+   },
+   "confidence": 0.9980158617469704,
+   "seconds": 0.13001704099588096
+  },
+  {
+   "id": "original-extraction-03-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "courier",
+   "choice": "courier",
+   "probabilities": {
+    "courier": 0.9595905758648856,
+    "pickup": 0.010660087591174509,
+    "post": 0.0007722141550685203,
+    "unknown": 0.028977122388871422
+   },
+   "confidence": 0.9595905758648856,
+   "seconds": 0.13159941701451316
+  },
+  {
+   "id": "original-extraction-03-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "courier",
+   "choice": "courier",
+   "probabilities": {
+    "courier": 0.999284273584673,
+    "pickup": 0.0003798568369983489,
+    "post": 4.0036635155099245e-05,
+    "unknown": 0.0002958329431734474
+   },
+   "confidence": 0.999284273584673,
+   "seconds": 0.1314831669733394
+  },
+  {
+   "id": "original-extraction-04-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "post",
+   "choice": "post",
+   "probabilities": {
+    "courier": 0.000379591594637587,
+    "pickup": 0.000910592898173681,
+    "post": 0.9985865801006379,
+    "unknown": 0.00012323540655079018
+   },
+   "confidence": 0.9985865801006379,
+   "seconds": 0.1310720829933416
+  },
+  {
+   "id": "original-extraction-04-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "post",
+   "choice": "post",
+   "probabilities": {
+    "courier": 0.00033516920226787233,
+    "pickup": 0.0004303659798173446,
+    "post": 0.9991256513094159,
+    "unknown": 0.00010881350849879455
+   },
+   "confidence": 0.9991256513094159,
+   "seconds": 0.13279641699045897
+  },
+  {
+   "id": "original-extraction-05-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "unknown",
+   "choice": "unknown",
+   "probabilities": {
+    "courier": 0.0013247386162063685,
+    "pickup": 0.00013962635631625762,
+    "post": 7.473660294074159e-05,
+    "unknown": 0.9984608984245367
+   },
+   "confidence": 0.9984608984245367,
+   "seconds": 0.13123166700825095
+  },
+  {
+   "id": "original-extraction-05-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "unknown",
+   "choice": "unknown",
+   "probabilities": {
+    "courier": 0.0016999903675597769,
+    "pickup": 0.0003347477914869655,
+    "post": 9.590684799937034e-05,
+    "unknown": 0.9978693549929538
+   },
+   "confidence": 0.9978693549929538,
+   "seconds": 0.13028141600079834
+  },
+  {
+   "id": "original-extraction-06-0",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "courier",
+   "choice": "courier",
+   "probabilities": {
+    "courier": 0.9972998490505656,
+    "pickup": 0.0003791025242341581,
+    "post": 0.00013946402476194524,
+    "unknown": 0.0021815844004384136
+   },
+   "confidence": 0.9972998490505656,
+   "seconds": 0.13244441701681353
+  },
+  {
+   "id": "original-extraction-06-1",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "courier",
+   "choice": "courier",
+   "probabilities": {
+    "courier": 0.9943367751500792,
+    "pickup": 0.0019195218889921037,
+    "post": 0.00015756395161646043,
+    "unknown": 0.003586139009312161
+   },
+   "confidence": 0.9943367751500792,
+   "seconds": 0.12854570901254192
+  },
+  {
+   "id": "original-adequacy-01-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.025957357480362795,
+    "yes": 0.9740426425196371
+   },
+   "confidence": 0.9740426425196371,
+   "seconds": 0.12549508301890455
+  },
+  {
+   "id": "original-adequacy-01-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.2689414242997412,
+    "yes": 0.7310585757002587
+   },
+   "confidence": 0.6791787056691698,
+   "seconds": 0.25531287500052713
+  },
+  {
+   "id": "original-adequacy-02-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.9947798744660377,
+    "yes": 0.005220125533962393
+   },
+   "confidence": 0.9947798744660377,
+   "seconds": 0.1276527080044616
+  },
+  {
+   "id": "original-adequacy-02-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.9953904284829732,
+    "yes": 0.004609571517026746
+   },
+   "confidence": 0.9953904284829732,
+   "seconds": 0.12762904100236483
+  },
+  {
+   "id": "original-adequacy-03-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.8670357636673932,
+    "yes": 0.13296423633260684
+   },
+   "confidence": 0.7981867777396212,
+   "seconds": 0.25333245799993165
+  },
+  {
+   "id": "original-adequacy-03-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.5312093733737563,
+    "yes": 0.46879062662624377
+   },
+   "confidence": 0.46879062662624377,
+   "seconds": 0.2574474170105532
+  },
+  {
+   "id": "original-adequacy-04-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.002472622678260459,
+    "yes": 0.9975273773217396
+   },
+   "confidence": 0.9975273773217396,
+   "seconds": 0.12725241700536571
+  },
+  {
+   "id": "original-adequacy-04-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.009708474475791274,
+    "yes": 0.9902915255242087
+   },
+   "confidence": 0.9902915255242087,
+   "seconds": 0.12730849999934435
+  },
+  {
+   "id": "original-adequacy-05-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.6076631698328917,
+    "yes": 0.3923368301671084
+   },
+   "confidence": 0.5312093733737563,
+   "seconds": 0.2339373330178205
+  },
+  {
+   "id": "original-adequacy-05-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.914900957313305,
+    "yes": 0.08509904268669496
+   },
+   "confidence": 0.8807970889295664,
+   "seconds": 0.23338462499668822
+  },
+  {
+   "id": "original-adequacy-06-0",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.004609572944278815,
+    "yes": 0.9953904270557211
+   },
+   "confidence": 0.9953904270557211,
+   "seconds": 0.12613129100645892
+  },
+  {
+   "id": "original-adequacy-06-1",
+   "family": "adequacy",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.42250463481418826,
+    "yes": 0.5774953651858118
+   },
+   "confidence": 0.3486451217982255,
+   "seconds": 0.25359400000888854
+  },
+  {
+   "id": "original-routing-01-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "math",
+   "choice": "math",
+   "probabilities": {
+    "math": 0.9794215191644671,
+    "coding": 0.013970698061228595,
+    "coding_agent": 0.0024277432948551815,
+    "document": 0.00042187852603236165,
+    "tools": 0.00022581530250556788,
+    "general": 0.003532345650911193
+   },
+   "confidence": 0.9794215191644671,
+   "seconds": 0.14196704200003296
+  },
+  {
+   "id": "original-routing-01-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "math",
+   "choice": "math",
+   "probabilities": {
+    "math": 0.9829419034081477,
+    "coding": 0.010919496941227166,
+    "coding_agent": 0.0024364691012363077,
+    "document": 0.0003736446382387866,
+    "tools": 0.00019999765818844647,
+    "general": 0.003128488252961757
+   },
+   "confidence": 0.9829419034081477,
+   "seconds": 0.19230658299056813
+  },
+  {
+   "id": "original-routing-02-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "coding",
+   "choice": "coding",
+   "probabilities": {
+    "math": 0.01096220909432717,
+    "coding": 0.9867866457153732,
+    "coding_agent": 0.0010196442795293319,
+    "document": 0.000137993847370694,
+    "tools": 7.386278387046918e-05,
+    "general": 0.0010196442795293319
+   },
+   "confidence": 0.9867866457153732,
+   "seconds": 0.138170624995837
+  },
+  {
+   "id": "original-routing-02-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "coding",
+   "choice": "coding",
+   "probabilities": {
+    "math": 0.015876053449472703,
+    "coding": 0.9822167434252438,
+    "coding_agent": 0.0006975451066111504,
+    "document": 0.00012121516391038078,
+    "tools": 7.352071333373826e-05,
+    "general": 0.0010149221414281618
+   },
+   "confidence": 0.9822167434252438,
+   "seconds": 0.14163770899176598
+  },
+  {
+   "id": "original-routing-03-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "coding_agent",
+   "choice": "coding_agent",
+   "probabilities": {
+    "math": 0.0179305795549426,
+    "coding": 0.0018898691810357686,
+    "coding_agent": 0.9789765803076516,
+    "document": 0.00015512998309639246,
+    "tools": 0.00015512998309639246,
+    "general": 0.0008927109901773507
+   },
+   "confidence": 0.9789765803076516,
+   "seconds": 0.14032041700556874
+  },
+  {
+   "id": "original-routing-03-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "coding_agent",
+   "choice": "coding_agent",
+   "probabilities": {
+    "math": 0.01793777461789087,
+    "coding": 0.00189062753509119,
+    "coding_agent": 0.9793695433481994,
+    "document": 9.412880234775116e-05,
+    "tools": 9.412880234775116e-05,
+    "general": 0.0006137968941229898
+   },
+   "confidence": 0.9793695433481994,
+   "seconds": 0.13989587500691414
+  },
+  {
+   "id": "original-routing-04-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "document",
+   "choice": "document",
+   "probabilities": {
+    "math": 0.04513131280730804,
+    "coding": 0.021318522651464507,
+    "coding_agent": 0.01660288609332208,
+    "document": 0.90648665653697,
+    "tools": 0.00039046245561901664,
+    "general": 0.01007015945531635
+   },
+   "confidence": 0.90648665653697,
+   "seconds": 0.1413200829993002
+  },
+  {
+   "id": "original-routing-04-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "document",
+   "choice": "document",
+   "probabilities": {
+    "math": 0.014919390396442763,
+    "coding": 0.014919390396442763,
+    "coding_agent": 0.03362136526239843,
+    "document": 0.8671064385973624,
+    "tools": 0.006620439356470971,
+    "general": 0.06281297599088277
+   },
+   "confidence": 0.7740204622372913,
+   "seconds": 0.27949479199014604
+  },
+  {
+   "id": "original-routing-05-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "tools",
+   "choice": "tools",
+   "probabilities": {
+    "math": 0.02913907373142215,
+    "coding": 0.001643914048642766,
+    "coding_agent": 0.0007765300121599083,
+    "document": 0.00041564656359658134,
+    "tools": 0.9649535998684358,
+    "general": 0.0030712357757428856
+   },
+   "confidence": 0.9649535998684358,
+   "seconds": 0.13740174999111332
+  },
+  {
+   "id": "original-routing-05-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "tools",
+   "choice": "tools",
+   "probabilities": {
+    "math": 0.01683570699050043,
+    "coding": 0.002278465174047996,
+    "coding_agent": 0.007952624874060493,
+    "document": 0.0020107384587442277,
+    "tools": 0.8111897239584441,
+    "general": 0.15973274054420267
+   },
+   "confidence": 0.6587559906154988,
+   "seconds": 0.28195579201565124
+  },
+  {
+   "id": "original-routing-06-0",
+   "family": "routing",
+   "type": "choice",
+   "gold": "general",
+   "choice": "general",
+   "probabilities": {
+    "math": 0.006636681644722997,
+    "coding": 0.006636681644722997,
+    "coding_agent": 0.0010177680935868406,
+    "document": 0.00025733207340546414,
+    "tools": 0.0004807596058574103,
+    "general": 0.9849707769377042
+   },
+   "confidence": 0.9849707769377042,
+   "seconds": 0.136012416012818
+  },
+  {
+   "id": "original-routing-06-1",
+   "family": "routing",
+   "type": "choice",
+   "gold": "general",
+   "choice": "general",
+   "probabilities": {
+    "math": 0.005866176382941951,
+    "coding": 0.005866176382941951,
+    "coding_agent": 0.001019388603039691,
+    "document": 0.00022745634224973044,
+    "tools": 0.0004815250803213376,
+    "general": 0.9865392772085053
+   },
+   "confidence": 0.9865392772085053,
+   "seconds": 0.136084124998888
+  }
+ ]
+}

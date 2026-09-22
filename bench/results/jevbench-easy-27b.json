@@ -1,0 +1,746 @@
+{
+ "date": "2026-09-22",
+ "tier": "easy",
+ "model": "qwen38-27b +DSPARK via http://oracle.tail0ade1a.ts.net:30002",
+ "mode": "undecided",
+ "orders": "auto",
+ "accuracy": 1.0,
+ "ece": 0.0011654686553668192,
+ "by_family": {
+  "extraction": 1.0,
+  "fact": 1.0,
+  "intent": 1.0,
+  "tool_selection": 1.0
+ },
+ "n_by_family": {
+  "extraction": 12,
+  "fact": 12,
+  "intent": 12,
+  "tool_selection": 12
+ },
+ "items": [
+  {
+   "id": "easy-intent-00",
+   "family": "intent",
+   "type": "choice",
+   "gold": "track_order",
+   "choice": "track_order",
+   "probabilities": {
+    "track_order": 0.9999882761090614,
+    "cancel_order": 6.96221995178974e-06,
+    "change_address": 3.500824044539204e-06,
+    "report_damage": 6.893531272053366e-07,
+    "billing_question": 5.714938151619416e-07
+   },
+   "confidence": 0.9999882761090614,
+   "seconds": 0.1502074169984553
+  },
+  {
+   "id": "easy-intent-01",
+   "family": "intent",
+   "type": "choice",
+   "gold": "cancel_order",
+   "choice": "cancel_order",
+   "probabilities": {
+    "track_order": 0.00010229706856899476,
+    "cancel_order": 0.9998701171357549,
+    "change_address": 1.8923054950306148e-05,
+    "report_damage": 6.5396328013317454e-06,
+    "billing_question": 2.1231079245699473e-06
+   },
+   "confidence": 0.9998701171357549,
+   "seconds": 0.13205716700758785
+  },
+  {
+   "id": "easy-intent-02",
+   "family": "intent",
+   "type": "choice",
+   "gold": "change_address",
+   "choice": "change_address",
+   "probabilities": {
+    "track_order": 0.0001088945764976957,
+    "cancel_order": 1.3005602499267164e-05,
+    "change_address": 0.9998697184226069,
+    "report_damage": 5.09306711703486e-06,
+    "billing_question": 3.28833127911191e-06
+   },
+   "confidence": 0.9998697184226069,
+   "seconds": 0.13934650001465343
+  },
+  {
+   "id": "easy-intent-03",
+   "family": "intent",
+   "type": "choice",
+   "gold": "report_damage",
+   "choice": "report_damage",
+   "probabilities": {
+    "track_order": 6.20488211515876e-05,
+    "cancel_order": 1.2218137317404545e-05,
+    "change_address": 1.2218137317404545e-05,
+    "report_damage": 0.9999112547760682,
+    "billing_question": 2.2601281452331684e-06
+   },
+   "confidence": 0.9999112547760682,
+   "seconds": 0.13417512498563156
+  },
+  {
+   "id": "easy-intent-04",
+   "family": "intent",
+   "type": "choice",
+   "gold": "billing_question",
+   "choice": "billing_question",
+   "probabilities": {
+    "track_order": 0.002182346291602549,
+    "cancel_order": 7.015137314177787e-05,
+    "change_address": 3.754932420043674e-05,
+    "report_damage": 6.190836950967514e-05,
+    "billing_question": 0.9976480446415456
+   },
+   "confidence": 0.9976480446415456,
+   "seconds": 0.13487650000024587
+  },
+  {
+   "id": "easy-intent-05",
+   "family": "intent",
+   "type": "choice",
+   "gold": "track_order",
+   "choice": "track_order",
+   "probabilities": {
+    "track_order": 0.9999725399220531,
+    "cancel_order": 1.8924990128660085e-05,
+    "change_address": 5.771795887268219e-06,
+    "report_damage": 1.5534577886683615e-06,
+    "billing_question": 1.209834142283293e-06
+   },
+   "confidence": 0.9999725399220531,
+   "seconds": 0.13468287501018494
+  },
+  {
+   "id": "easy-intent-06",
+   "family": "intent",
+   "type": "choice",
+   "gold": "set_alarm",
+   "choice": "set_alarm",
+   "probabilities": {
+    "set_alarm": 0.9998946532360645,
+    "play_music": 8.480931173796707e-05,
+    "weather": 1.1477692225159955e-05,
+    "send_message": 5.771346093041981e-06,
+    "turn_off_lights": 3.288413879393236e-06
+   },
+   "confidence": 0.9998946532360645,
+   "seconds": 0.13631370800430886
+  },
+  {
+   "id": "easy-intent-07",
+   "family": "intent",
+   "type": "choice",
+   "gold": "play_music",
+   "choice": "play_music",
+   "probabilities": {
+    "set_alarm": 0.00020342207625653828,
+    "play_music": 0.9997727645231094,
+    "weather": 1.3843046016798178e-05,
+    "send_message": 7.40964858600551e-06,
+    "turn_off_lights": 2.5607060311685594e-06
+   },
+   "confidence": 0.9997727645231094,
+   "seconds": 0.13622858398593962
+  },
+  {
+   "id": "easy-intent-08",
+   "family": "intent",
+   "type": "choice",
+   "gold": "weather",
+   "choice": "weather",
+   "probabilities": {
+    "set_alarm": 0.00010228984328241958,
+    "play_music": 9.027046986259896e-05,
+    "weather": 0.9997999733132529,
+    "send_message": 3.96620764250681e-06,
+    "turn_off_lights": 3.5001659595196105e-06
+   },
+   "confidence": 0.9997999733132529,
+   "seconds": 0.13560416697873734
+  },
+  {
+   "id": "easy-intent-09",
+   "family": "intent",
+   "type": "choice",
+   "gold": "send_message",
+   "choice": "send_message",
+   "probabilities": {
+    "set_alarm": 0.00017950481775227029,
+    "play_music": 9.608200517612119e-05,
+    "weather": 2.7527955374904336e-05,
+    "send_message": 0.9996914646458889,
+    "turn_off_lights": 5.42057580781871e-06
+   },
+   "confidence": 0.9996914646458889,
+   "seconds": 0.14201062501524575
+  },
+  {
+   "id": "easy-intent-10",
+   "family": "intent",
+   "type": "choice",
+   "gold": "turn_off_lights",
+   "choice": "turn_off_lights",
+   "probabilities": {
+    "set_alarm": 0.0003352774373176944,
+    "play_music": 0.0001233416762778267,
+    "weather": 4.537486694223583e-05,
+    "send_message": 4.8301294434145194e-05,
+    "turn_off_lights": 0.999447704725028
+   },
+   "confidence": 0.999447704725028,
+   "seconds": 0.1341451249900274
+  },
+  {
+   "id": "easy-intent-11",
+   "family": "intent",
+   "type": "choice",
+   "gold": "set_alarm",
+   "choice": "set_alarm",
+   "probabilities": {
+    "set_alarm": 0.9999414080956612,
+    "play_music": 4.2646767905647095e-05,
+    "weather": 1.0782791559642647e-05,
+    "send_message": 2.9021489773856806e-06,
+    "turn_off_lights": 2.2601958961778446e-06
+   },
+   "confidence": 0.9999414080956612,
+   "seconds": 0.13666579098207876
+  },
+  {
+   "id": "easy-fact-00",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.00043055703994048037,
+    "yes": 0.9995694429600596
+   },
+   "confidence": 0.9995694429600596,
+   "seconds": 0.1438981670071371
+  },
+  {
+   "id": "easy-fact-01",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.9968273176228906,
+    "yes": 0.0031726823771094106
+   },
+   "confidence": 0.9968273176228906,
+   "seconds": 0.1265297080099117
+  },
+  {
+   "id": "easy-fact-02",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.0006263341984789712,
+    "yes": 0.999373665801521
+   },
+   "confidence": 0.999373665801521,
+   "seconds": 0.12686608301009983
+  },
+  {
+   "id": "easy-fact-03",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.9820137938213337,
+    "yes": 0.017986206178666232
+   },
+   "confidence": 0.9820137938213337,
+   "seconds": 0.1280911659996491
+  },
+  {
+   "id": "easy-fact-04",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.000487857156842069,
+    "yes": 0.9995121428431579
+   },
+   "confidence": 0.9995121428431579,
+   "seconds": 0.12697024998487905
+  },
+  {
+   "id": "easy-fact-05",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.9971990727883605,
+    "yes": 0.0028009272116394338
+   },
+   "confidence": 0.9971990727883605,
+   "seconds": 0.12749574999907054
+  },
+  {
+   "id": "easy-fact-06",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.0006263341677281577,
+    "yes": 0.9993736658322718
+   },
+   "confidence": 0.9993736658322718,
+   "seconds": 0.12969600001815706
+  },
+  {
+   "id": "easy-fact-07",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.9978172831738271,
+    "yes": 0.0021827168261728163
+   },
+   "confidence": 0.9978172831738271,
+   "seconds": 0.11960454197833315
+  },
+  {
+   "id": "easy-fact-08",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.00033535001588380896,
+    "yes": 0.9996646499841161
+   },
+   "confidence": 0.9996646499841161,
+   "seconds": 0.120705542009091
+  },
+  {
+   "id": "easy-fact-09",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.996406397491945,
+    "yes": 0.003593602508055016
+   },
+   "confidence": 0.996406397491945,
+   "seconds": 0.12418195800273679
+  },
+  {
+   "id": "easy-fact-10",
+   "family": "fact",
+   "type": "noul",
+   "gold": "yes",
+   "choice": "yes",
+   "probabilities": {
+    "no": 0.00048785709508029446,
+    "yes": 0.9995121429049197
+   },
+   "confidence": 0.9995121429049197,
+   "seconds": 0.12732025000150315
+  },
+  {
+   "id": "easy-fact-11",
+   "family": "fact",
+   "type": "noul",
+   "gold": "no",
+   "choice": "no",
+   "probabilities": {
+    "no": 0.9890130597374784,
+    "yes": 0.010986940262521613
+   },
+   "confidence": 0.9890130597374784,
+   "seconds": 0.12915908300783485
+  },
+  {
+   "id": "easy-extraction-00",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "paypal",
+   "choice": "paypal",
+   "probabilities": {
+    "credit_card": 7.967099260426347e-05,
+    "paypal": 0.9998946635095314,
+    "bank_transfer": 1.777700133897368e-05,
+    "cash": 7.888496525477324e-06
+   },
+   "confidence": 0.9998946635095314,
+   "seconds": 0.13145420898217708
+  },
+  {
+   "id": "easy-extraction-01",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "cash",
+   "choice": "cash",
+   "probabilities": {
+    "credit_card": 0.00010226034105359601,
+    "paypal": 0.00029590010812230645,
+    "bank_transfer": 9.024443423704282e-05,
+    "cash": 0.9995115951165869
+   },
+   "confidence": 0.9995115951165869,
+   "seconds": 0.12808254198171198
+  },
+  {
+   "id": "easy-extraction-02",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "bank_transfer",
+   "choice": "bank_transfer",
+   "probabilities": {
+    "credit_card": 0.0001233820049349825,
+    "paypal": 9.60900020602843e-05,
+    "bank_transfer": 0.9997743851646896,
+    "cash": 6.1428283150620996e-06
+   },
+   "confidence": 0.9997743851646896,
+   "seconds": 0.13373333401978016
+  },
+  {
+   "id": "easy-extraction-03",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "high",
+   "choice": "high",
+   "probabilities": {
+    "low": 0.00043047220307706606,
+    "medium": 0.00017944751199016278,
+    "high": 0.9993723125751481,
+    "urgent": 1.7767709784554605e-05
+   },
+   "confidence": 0.9993723125751481,
+   "seconds": 0.12762012498569675
+  },
+  {
+   "id": "easy-extraction-04",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "low",
+   "choice": "low",
+   "probabilities": {
+    "low": 0.9998218701649191,
+    "medium": 0.0001398167692650219,
+    "high": 2.753155425761373e-05,
+    "urgent": 1.0781511558439119e-05
+   },
+   "confidence": 0.9998218701649191,
+   "seconds": 0.12916933299857192
+  },
+  {
+   "id": "easy-extraction-05",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "urgent",
+   "choice": "urgent",
+   "probabilities": {
+    "low": 0.00010228750915990284,
+    "medium": 6.204051041111791e-05,
+    "high": 5.828166590381961e-05,
+    "urgent": 0.9997773903145252
+   },
+   "confidence": 0.9997773903145252,
+   "seconds": 0.12632224999833852
+  },
+  {
+   "id": "easy-extraction-06",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "M",
+   "choice": "M",
+   "probabilities": {
+    "S": 0.0010315078236310935,
+    "M": 0.9982677630336995,
+    "L": 0.0005521263512052939,
+    "XL": 0.0001486027914640719
+   },
+   "confidence": 0.9982677630336995,
+   "seconds": 0.1265940830053296
+  },
+  {
+   "id": "easy-extraction-07",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "XL",
+   "choice": "XL",
+   "probabilities": {
+    "S": 0.0001158799732098939,
+    "M": 0.00019105377667931307,
+    "L": 0.00014879283088659834,
+    "XL": 0.9995442734192242
+   },
+   "confidence": 0.9995442734192242,
+   "seconds": 0.12273533298866823
+  },
+  {
+   "id": "easy-extraction-08",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "thursday",
+   "choice": "thursday",
+   "probabilities": {
+    "monday": 2.7534427102904744e-05,
+    "tuesday": 2.144383338916473e-05,
+    "wednesday": 1.568864365204075e-05,
+    "thursday": 0.9999269355700433,
+    "friday": 8.39752581271672e-06
+   },
+   "confidence": 0.9999269355700433,
+   "seconds": 0.13067725001019426
+  },
+  {
+   "id": "easy-extraction-09",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "monday",
+   "choice": "monday",
+   "probabilities": {
+    "monday": 0.999950474778899,
+    "tuesday": 2.931094577170682e-05,
+    "wednesday": 1.221862005308094e-05,
+    "thursday": 2.902176643223975e-06,
+    "friday": 5.0934786330116445e-06
+   },
+   "confidence": 0.999950474778899,
+   "seconds": 0.12671291700098664
+  },
+  {
+   "id": "easy-extraction-10",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "friday",
+   "choice": "friday",
+   "probabilities": {
+    "monday": 8.480449771384165e-05,
+    "tuesday": 3.119783122779292e-05,
+    "wednesday": 2.5863910511918126e-05,
+    "thursday": 2.0142833759970574e-05,
+    "friday": 0.9998379909267865
+   },
+   "confidence": 0.9998379909267865,
+   "seconds": 0.12908124999376014
+  },
+  {
+   "id": "easy-extraction-11",
+   "family": "extraction",
+   "type": "choice",
+   "gold": "credit_card",
+   "choice": "credit_card",
+   "probabilities": {
+    "credit_card": 0.9999799755888805,
+    "paypal": 1.5689484560316695e-05,
+    "bank_transfer": 3.7265792239519652e-06,
+    "cash": 6.083473351143132e-07
+   },
+   "confidence": 0.9999799755888805,
+   "seconds": 0.13212675001705065
+  },
+  {
+   "id": "easy-tool_selection-00",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "get_weather",
+   "choice": "get_weather",
+   "probabilities": {
+    "get_weather": 0.9999232169117327,
+    "send_email": 5.829019352240736e-05,
+    "create_calendar_event": 1.1478019654473894e-05,
+    "convert_currency": 3.7263674012125826e-06,
+    "translate_text": 3.2885076894623125e-06
+   },
+   "confidence": 0.9999232169117327,
+   "seconds": 0.1371332500129938
+  },
+  {
+   "id": "easy-tool_selection-01",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "send_email",
+   "choice": "send_email",
+   "probabilities": {
+    "get_weather": 2.4300135927083768e-05,
+    "send_email": 0.9999717544032738,
+    "create_calendar_event": 2.726399690240489e-06,
+    "convert_currency": 6.475766876075243e-07,
+    "translate_text": 5.714844209996323e-07
+   },
+   "confidence": 0.9999717544032738,
+   "seconds": 0.1359082910057623
+  },
+  {
+   "id": "easy-tool_selection-02",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "create_calendar_event",
+   "choice": "create_calendar_event",
+   "probabilities": {
+    "get_weather": 0.0001584292653649527,
+    "send_email": 4.005719141851756e-05,
+    "create_calendar_event": 0.9997972593409896,
+    "convert_currency": 2.2598720991965996e-06,
+    "translate_text": 1.9943301277783464e-06
+   },
+   "confidence": 0.9997972593409896,
+   "seconds": 0.13678162498399615
+  },
+  {
+   "id": "easy-tool_selection-03",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "convert_currency",
+   "choice": "convert_currency",
+   "probabilities": {
+    "get_weather": 0.00023044197200254815,
+    "send_email": 0.00023044197200254815,
+    "create_calendar_event": 4.004481021137986e-05,
+    "convert_currency": 0.9994882933313298,
+    "translate_text": 1.0777914453946028e-05
+   },
+   "confidence": 0.9994882933313298,
+   "seconds": 0.13910266698803753
+  },
+  {
+   "id": "easy-tool_selection-04",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "translate_text",
+   "choice": "translate_text",
+   "probabilities": {
+    "get_weather": 0.0010319909111144185,
+    "send_email": 0.00013120298342617366,
+    "create_calendar_event": 7.02278963346471e-05,
+    "convert_currency": 3.116344009115258e-05,
+    "translate_text": 0.9987354147690336
+   },
+   "confidence": 0.9987354147690336,
+   "seconds": 0.13862633402459323
+  },
+  {
+   "id": "easy-tool_selection-05",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "create_calendar_event",
+   "choice": "create_calendar_event",
+   "probabilities": {
+    "get_weather": 9.6098614824224e-05,
+    "send_email": 3.535270471888521e-05,
+    "create_calendar_event": 0.999864294194535,
+    "convert_currency": 2.2600228005506096e-06,
+    "translate_text": 1.994463121256476e-06
+   },
+   "confidence": 0.999864294194535,
+   "seconds": 0.13609045799239539
+  },
+  {
+   "id": "easy-tool_selection-06",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "search_flights",
+   "choice": "search_flights",
+   "probabilities": {
+    "search_flights": 0.9999870027734868,
+    "book_restaurant": 7.889222717222738e-06,
+    "set_reminder": 3.7266049387406066e-06,
+    "get_stock_price": 6.475868358868597e-07,
+    "call_taxi": 7.338120213116358e-07
+   },
+   "confidence": 0.9999870027734868,
+   "seconds": 0.13689104199875146
+  },
+  {
+   "id": "easy-tool_selection-07",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "book_restaurant",
+   "choice": "book_restaurant",
+   "probabilities": {
+    "search_flights": 0.00010889535523309176,
+    "book_restaurant": 0.9998767918861405,
+    "set_reminder": 8.938675084457307e-06,
+    "get_stock_price": 3.500435458109193e-06,
+    "call_taxi": 1.8736480837460526e-06
+   },
+   "confidence": 0.9998767918861405,
+   "seconds": 0.1392458339978475
+  },
+  {
+   "id": "easy-tool_selection-08",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "set_reminder",
+   "choice": "set_reminder",
+   "probabilities": {
+    "search_flights": 0.00020342020573034007,
+    "book_restaurant": 2.93054591726832e-05,
+    "set_reminder": 0.9997632780194282,
+    "get_stock_price": 1.8734353265901272e-06,
+    "call_taxi": 2.122880342246347e-06
+   },
+   "confidence": 0.9997632780194282,
+   "seconds": 0.13493550001294352
+  },
+  {
+   "id": "easy-tool_selection-09",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "get_stock_price",
+   "choice": "get_stock_price",
+   "probabilities": {
+    "search_flights": 9.608690391357648e-05,
+    "book_restaurant": 0.00012337802683586502,
+    "set_reminder": 3.119485043636727e-05,
+    "get_stock_price": 0.9997428014229423,
+    "call_taxi": 6.538795871937973e-06
+   },
+   "confidence": 0.9997428014229423,
+   "seconds": 0.13908783401711844
+  },
+  {
+   "id": "easy-tool_selection-10",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "call_taxi",
+   "choice": "call_taxi",
+   "probabilities": {
+    "search_flights": 0.0005527465678606401,
+    "book_restaurant": 2.1432310300499492e-05,
+    "set_reminder": 2.428598926265921e-05,
+    "get_stock_price": 1.221176230352826e-05,
+    "call_taxi": 0.9993893233702728
+   },
+   "confidence": 0.9993893233702728,
+   "seconds": 0.13596899999538437
+  },
+  {
+   "id": "easy-tool_selection-11",
+   "family": "tool_selection",
+   "type": "choice",
+   "gold": "set_reminder",
+   "choice": "set_reminder",
+   "probabilities": {
+    "search_flights": 0.00020342107171115268,
+    "book_restaurant": 2.5862087045817566e-05,
+    "set_reminder": 0.9997678894483158,
+    "get_stock_price": 1.0674558165854694e-06,
+    "call_taxi": 1.7599371103370382e-06
+   },
+   "confidence": 0.9997678894483158,
+   "seconds": 0.13606883300235495
+  }
+ ]
+}

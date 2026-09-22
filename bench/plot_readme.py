@@ -1,0 +1,224 @@
+"""The README's charts, from the saved results.
+
+    python bench/plot_readme.py            # writes docs/charts/*-light.png and *-dark.png
+
+Inputs (all in bench/results/, all written by the bench scripts, never by hand):
+  jevbench-<tier>-<system>.json   bench/jevbench.py --out      per-item accuracy
+  speed-<system>.json             bench/speed.py --label       latency and throughput
+
+Systems drawn, in fixed colour order: rev on Qwen3.8-27B (blue), Jev (orange),
+rev on Qwen3.5-2B locally (aqua). Three series is the most this palette seats
+on one chart; add a fourth as a new chart, not a new colour.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.ticker
+import matplotlib.pyplot as plt
+import numpy as np
+
+HERE = Path(__file__).parent
+RESULTS = HERE / "results"
+OUT = HERE.parent / "docs" / "charts"
+
+SYSTEMS = [  # key, label, results suffix, speed file
+    ("27b", "rev, Qwen3.8-27B (served)", "27b", "speed-remote-logprob.json"),
+    ("jev", "Jev 1.13", "jev", "speed-jev.json"),
+    ("2b", "rev, Qwen3.5-2B (this laptop)", "2b", "speed-rev.json"),
+]
+THEMES = {
+    "light": {"surface": "#fcfcfb", "text": "#0b0b0b", "muted": "#52514e", "grid": "#e6e5e1",
+              "range": "#d9d8d3", "series": ["#2a78d6", "#eb6834", "#1baf7a"]},
+    "dark":  {"surface": "#1a1a19", "text": "#ffffff", "muted": "#c3c2b7", "grid": "#33332f",
+              "range": "#3d3d38", "series": ["#3987e5", "#d95926", "#199e70"]},
+}
+FAMILY_LABEL = {
+    "adversarial": "adversarial", "ambiguous": "ambiguous", "judge_hard": "judge",
+    "long_policy": "long policy", "multi_hop": "multi-hop", "probability": "probability",
+    "routing_hard": "routing", "temporal_numeric": "dates & arithmetic",
+    "tradeoff": "trade-off", "trap": "trap",
+}
+
+
+def load_json(name):
+    p = RESULTS / name
+    return json.loads(p.read_text()) if p.exists() else None
+
+
+def style(ax, t):
+    ax.set_facecolor(t["surface"])
+    for s in ("top", "right", "left"):
+        ax.spines[s].set_visible(False)
+    ax.spines["bottom"].set_color(t["grid"])
+    ax.tick_params(colors=t["muted"], labelsize=10, length=0)
+    ax.grid(axis="x", color=t["grid"], linewidth=1)
+    ax.set_axisbelow(True)
+
+
+def figure(t, height):
+    fig = plt.figure(figsize=(11, height), dpi=180, facecolor=t["surface"])
+    plt.rcParams.update({"font.family": "DejaVu Sans", "text.color": t["text"],
+                         "axes.labelcolor": t["muted"]})
+    return fig
+
+
+def dot(ax, x, y, color, t, z=3):
+    ax.plot([x], [y], "o", ms=9, color=color, markeredgecolor=t["surface"], markeredgewidth=2, zorder=z)
+
+
+def legend(fig, t, labels, colors, x=0.5, y=0.02):
+    handles = [plt.Line2D([], [], marker="o", ls="", ms=9, color=c, markeredgecolor=t["surface"],
+                          markeredgewidth=2) for c in colors]
+    fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(x, y), ncol=len(labels),
+               frameon=False, fontsize=10, labelcolor=t["muted"], handletextpad=0.4, columnspacing=1.8)
+
+
+# --- 1. accuracy: tiers, then the hard families --------------------------------
+def accuracy(theme):
+    t = THEMES[theme]
+    data = {k: {tier: load_json(f"jevbench-{tier}-{suf}.json") for tier in ("easy", "standard", "hard")}
+            for k, _, suf, _ in SYSTEMS}
+    rows = [("easy (48)", lambda d: d["easy"]["accuracy"]),
+            ("standard (72)", lambda d: d["standard"]["accuracy"]),
+            ("hard (111)", lambda d: d["hard"]["accuracy"])]
+    fams = sorted(data["27b"]["hard"]["by_family"], key=lambda f: -data["27b"]["hard"]["by_family"][f])
+    n = data["27b"]["hard"]["n_by_family"]
+    frows = [(f"{FAMILY_LABEL.get(f, f)} ({n[f]})", (lambda f: lambda d: d["hard"]["by_family"][f])(f)) for f in fams]
+
+    fig = figure(t, 8.2)
+    ax = fig.add_axes([0.24, 0.10, 0.70, 0.78])
+    style(ax, t)
+    ys, labels = [], []
+    y = 0
+    for label, get in rows + [(None, None)] + frows:
+        if label is None:
+            y -= 0.6; continue
+        vals = {k: get(data[k]) for k, _, _, _ in SYSTEMS if all(data[k].values())}
+        lo, hi = min(vals.values()), max(vals.values())
+        ax.plot([lo * 100, hi * 100], [y, y], color=t["range"], linewidth=3, solid_capstyle="round", zorder=1)
+        for j, (k, _, _, _) in enumerate(SYSTEMS):
+            if k not in vals:
+                continue
+            # Two systems at the same value would hide one another: split them
+            # a little around the row so both stay visible.
+            twins = [kk for kk in vals if kk != k and abs(vals[kk] - vals[k]) < 0.005]
+            dy = 0.0
+            if twins:
+                order = [kk for kk, _, _, _ in SYSTEMS if kk in vals and (kk == k or kk in twins)]
+                dy = (len(order) - 1) / 2 * 0.24 - order.index(k) * 0.24
+            dot(ax, vals[k] * 100, y + dy, t["series"][j], t, z=4 if k == "27b" else 3)
+        # direct labels: the served 27B above, Jev below, only where they differ from each other
+        a, b = vals.get("27b"), vals.get("jev")
+        if a is not None:
+            ax.text(a * 100, y + 0.40, f"{a*100:.0f}", ha="center", va="bottom", fontsize=9, color=t["muted"])
+        if b is not None and (a is None or abs(a - b) > 0.005):
+            ax.text(b * 100, y - 0.40, f"{b*100:.0f}", ha="center", va="top", fontsize=9, color=t["muted"])
+        ys.append(y); labels.append(label)
+        y -= 1
+    ax.set_yticks(ys); ax.set_yticklabels(labels, fontsize=10.5, color=t["text"])
+    ax.set_xlim(15, 104); ax.set_ylim(y + 0.2, 0.9)
+    ax.set_xticks([20, 40, 60, 80, 100]); ax.set_xticklabels([f"{v}%" for v in (20, 40, 60, 80, 100)])
+    ax.text(0.5, 1.10, "Where a frozen Qwen3.8-27B matches Jev, and where it does not",
+            transform=ax.transAxes, ha="center", fontsize=15, color=t["text"], weight="medium")
+    ax.text(0.5, 1.05, "Accuracy on JevBench's 231 public items, per tier and then per hard family. "
+                       "Same items for every system. 2026-09-22.",
+            transform=ax.transAxes, ha="center", fontsize=9.5, color=t["muted"])
+    ax.axhline(-2.8, color=t["grid"], linewidth=1)
+    ax.text(16, -3.05, "hard tier by family", fontsize=9, color=t["muted"], va="top")
+    legend(fig, t, [s[1] for s in SYSTEMS], t["series"])
+    fig.savefig(OUT / f"accuracy-{theme}.png", facecolor=t["surface"])
+    plt.close(fig)
+
+
+# --- 2. latency: p50 with the p95 reach ----------------------------------------
+def latency(theme):
+    t = THEMES[theme]
+    speed = {k: load_json(f)["results"] for k, _, _, f in SYSTEMS}
+    kinds = [("short: clipboard paste", "short, ~230 tokens"),
+             ("medium: JevBench standard", "medium, ~160 tokens"),
+             ("long: JevBench hard", "long document, 1-4k tokens"),
+             ("long: three questions per request", "long, three questions at once")]
+    fig = figure(t, 4.6)
+    ax = fig.add_axes([0.26, 0.17, 0.70, 0.62])
+    style(ax, t)
+    ys, labels = [], []
+    for i, (key, label) in enumerate(kinds):
+        for j, (k, _, _, _) in enumerate(SYSTEMS):
+            y = -i * 1.0 - (j - 1) * 0.26
+            r = speed[k][key]
+            p50, p95 = r["p50_ms"], r["p95_ms"]
+            ax.plot([p50, p95], [y, y], color=t["series"][j], linewidth=2, alpha=0.45, zorder=2,
+                    solid_capstyle="round")
+            dot(ax, p50, y, t["series"][j], t)
+            ax.text(p95 * 1.08, y, f"{p50} / {p95} ms", va="center", fontsize=8.5, color=t["muted"])
+        ys.append(-i); labels.append(label)
+    ax.set_xscale("log")
+    ax.xaxis.set_minor_locator(matplotlib.ticker.NullLocator())
+    ax.set_xlim(90, 9000)
+    ax.set_xticks([100, 300, 1000, 3000]); ax.set_xticklabels(["100 ms", "300 ms", "1 s", "3 s"])
+    ax.set_yticks(ys); ax.set_yticklabels(labels, fontsize=10.5, color=t["text"])
+    ax.set_ylim(-len(kinds) + 0.45, 0.55)
+    ax.text(0.5, 1.16, "One question, end to end: median, with the line reaching p95",
+            transform=ax.transAxes, ha="center", fontsize=15, color=t["text"], weight="medium")
+    ax.text(0.5, 1.08, "Same client, same items. The 27B is two network hops away on a cluster; "
+                       "Jev via its API; the 2B in-process on an M2 Pro.",
+            transform=ax.transAxes, ha="center", fontsize=9.5, color=t["muted"])
+    legend(fig, t, [s[1] for s in SYSTEMS], t["series"])
+    fig.savefig(OUT / f"latency-{theme}.png", facecolor=t["surface"])
+    plt.close(fig)
+
+
+# --- 3. the gate: coverage against accuracy on hard ----------------------------
+def gate(theme):
+    t = THEMES[theme]
+    fig = figure(t, 4.8)
+    ax = fig.add_axes([0.10, 0.17, 0.86, 0.62])
+    style(ax, t)
+    ax.grid(axis="y", color=t["grid"], linewidth=1)
+    for j, (k, label, suf, _) in enumerate(SYSTEMS):
+        d = load_json(f"jevbench-hard-{suf}.json")
+        if d is None:
+            continue
+        items = sorted(d["items"], key=lambda r: -r["confidence"])
+        hit = np.array([r["choice"] == r["gold"] for r in items], dtype=float)
+        cov = np.arange(1, len(items) + 1) / len(items)
+        acc = np.cumsum(hit) / np.arange(1, len(items) + 1)
+        start = int(0.1 * len(items))          # below ten items one flip moves the line 10 points
+        ax.plot(cov[start:] * 100, acc[start:] * 100, color=t["series"][j], linewidth=2,
+                solid_joinstyle="round", solid_capstyle="round", zorder=3 if k != "27b" else 4)
+        # the point the README quotes: everything at confidence >= 0.9
+        m = np.array([r["confidence"] >= 0.9 for r in items])
+        if m.any():
+            c90, a90 = m.mean(), hit[m].mean()
+            dot(ax, c90 * 100, a90 * 100, t["series"][j], t, z=5)
+            short = {"27b": "27B", "jev": "Jev", "2b": "2B"}[k]
+            dx, dy, va = {"27b": (1.5, 1.2, "bottom"), "jev": (-1.5, -5.5, "top"), "2b": (1.5, 1.2, "bottom")}[k]
+            ha = "right" if k == "jev" else "left"
+            ax.text(c90 * 100 + dx, a90 * 100 + dy,
+                    f"{short}: at 0.9 answers {c90*100:.0f}%, {a90*100:.0f}% of them right",
+                    fontsize=8.5, color=t["muted"], va=va, ha=ha)
+    ax.set_xlim(8, 100); ax.set_ylim(50, 101)
+    ax.set_xticks([25, 50, 75, 100]); ax.set_xticklabels(["25%", "50%", "75%", "100%"])
+    ax.set_yticks([50, 60, 70, 80, 90, 100]); ax.set_yticklabels(["50%", "60%", "70%", "80%", "90%", "100%"])
+    ax.set_xlabel("share of hard items answered (most confident first)", fontsize=9.5)
+    ax.set_ylabel("accuracy on what was answered", fontsize=9.5)
+    ax.text(0.5, 1.16, "What a confidence gate buys on the hard tier",
+            transform=ax.transAxes, ha="center", fontsize=15, color=t["text"], weight="medium")
+    ax.text(0.5, 1.08, "Items sorted by each system's own confidence. Act above a threshold, "
+                       "hand the rest to a person; the dot is the 0.9 gate.",
+            transform=ax.transAxes, ha="center", fontsize=9.5, color=t["muted"])
+    legend(fig, t, [s[1] for s in SYSTEMS], t["series"])
+    fig.savefig(OUT / f"gate-{theme}.png", facecolor=t["surface"])
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    OUT.mkdir(parents=True, exist_ok=True)
+    for theme in THEMES:
+        accuracy(theme); latency(theme); gate(theme)
+    print(f"-> {OUT}")
