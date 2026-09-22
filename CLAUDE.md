@@ -18,7 +18,7 @@ Chinese; later sections overturn earlier ones.
   protocol. Check the port is free first and stop the server when done;
   never take :8000, :5173 or :8443 (Parley).
 - `rev serve --upstream http://localhost:30002` (or `--upstream
-  http://<relay>:30002` from any tailnet device, no ssh) uses
+  http://<relay>:30002` from any tailnet device, no ssh; the relay hostname is in memory, not here) uses
   the 27B model fleet serves on ORCD instead of loading one here:
   `src/rev/remote.py`. Thinking is off in the prompt it renders, per request;
   the server's default stays as the coding agents want it. That endpoint runs
