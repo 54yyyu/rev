@@ -117,6 +117,8 @@ JevBench public items, `qwen38-27b` (27B, INT4 AWQ, 2x L40S) read exactly,
 | **rev, qwen38-27b via fleet, exact** | **1.000** | **0.986** | **0.784** |
 | Jev 1.13.0 (commercial) | 1.000 | 0.986 | 0.730 |
 
+`docs/JEVBENCH.md` is why this is not on the public leaderboard.
+
 Standard equals Jev and hard is above it; `temporal_numeric` is still the weak
 family (0.400, Jev 0.267). At the 0.9 gate, standard answers 78% of items at
 1.000 and hard 35% at 1.000, and the confidences are the model's own rather
