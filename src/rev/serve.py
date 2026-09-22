@@ -27,7 +27,7 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from .remote import add_engine_args, engine_from_args
+from .remote import RemoteError, add_engine_args, engine_from_args
 
 DEFAULT_PORT = 8421
 MAX_BODY = 4 * 1024 * 1024
@@ -72,6 +72,9 @@ def make_handler(rev, lock, orders: str):
                 out["seconds"] = round(time.perf_counter() - started, 4)
             except (ValueError, KeyError, TypeError, json.JSONDecodeError) as e:
                 return self._send(400, {"error": str(e)})
+            except RemoteError as e:
+                # The model behind --upstream, not this request, is the problem.
+                return self._send(502, {"error": f"upstream: {e.message}"})
             self._send(200, out)
 
         def log_message(self, fmt, *args):

@@ -11,7 +11,7 @@ Chinese; later sections overturn earlier ones.
 
 ## Running
 
-- Venv: `.venv/` (`uv pip install -e ".[bench]"`). No pytest; tests are
+- Venv: `.venv/` (`uv pip install -e ".[mlx,bench]"`; plain `-e .` has no MLX and only serves `--upstream`). No pytest; tests are
   scripts: `for t in tests/test_*.py; do .venv/bin/python $t; done`.
   `test_equivalence.py` needs the SemIf checkout at `~/Documents/misc/semif`.
 - `rev serve` listens on 127.0.0.1:8421 and speaks Jev's `/v1/systemone`

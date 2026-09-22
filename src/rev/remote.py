@@ -33,6 +33,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.request
 from collections import Counter
@@ -48,6 +49,10 @@ from .prompt import render
 # files are fetched; the weights are never touched.
 DEFAULT_TOKENIZER = "abhishekchohan/Qwen3.8-27B-AWQ-INT4"
 DEFAULT_SAMPLES = 32
+# After a refusal, try the exact path again this often. The endpoint behind
+# the URL is replaced every few hours on a cluster, and the replacement may
+# allow what its predecessor refused.
+RETRY_EXACT_SECONDS = 300
 
 
 class RemoteError(RuntimeError):
@@ -90,6 +95,7 @@ class Remote(Decider):
         self.timeout = timeout
         self.tokenizer = load_tokenizer(tokenizer)
         self.exact: bool | None = None          # unknown until the first request
+        self._retry_exact_at = 0.0
         self.served = self._served_name()
         self.name = f"{self.served} via {self.upstream}"
         super().__init__(max_tokens=max_tokens, temperature=temperature, offsets=offsets,
@@ -100,6 +106,11 @@ class Remote(Decider):
         return {None: "undecided", True: "logprob", False: f"{self.samples} samples"}[self.exact]
 
     def _served_name(self) -> str:
+        """What the upstream serves, or a placeholder when it is not up yet.
+
+        Not fatal: on a cluster the endpoint is down for minutes at each
+        renewal, and a server in front of it should wait, not die.
+        """
         try:
             with urllib.request.urlopen(f"{self.upstream}/get_server_info", timeout=10) as r:
                 info = json.load(r)
@@ -107,7 +118,9 @@ class Remote(Decider):
             spec = info.get("speculative_algorithm")
             return f"{name}{f' +{spec}' if spec else ''}"
         except (urllib.error.URLError, ValueError, OSError) as e:
-            raise RuntimeError(f"cannot reach sglang at {self.upstream} ({e})") from None
+            print(f"[remote] {self.upstream} not answering yet ({e}); will keep trying",
+                  file=sys.stderr)
+            return "?"
 
     def _post(self, body: dict) -> Any:
         req = urllib.request.Request(f"{self.upstream}/generate", data=json.dumps(body).encode(),
@@ -160,19 +173,25 @@ class Remote(Decider):
         check_boundary(self.tokenizer, prompt, ids, slots)
         tids = [token for _, token in slots]
 
-        if self.exact is not False:
+        if self.served == "?":
+            self.served = self._served_name()
+            self.name = f"{self.served} via {self.upstream}"
+        if self.exact is not False or time.monotonic() >= self._retry_exact_at:
             try:
                 z = self._logprobs(prompt, tids)
-                if self.exact is None:
+                if self.exact is not True:
                     print(f"[remote] {self.served}: reading log-probabilities", file=sys.stderr)
                 self.exact = True
                 return z, len(ids)
             except RemoteError as e:
                 if e.code != 400 or "logprob" not in e.message.lower():
                     raise
-                print(f"[remote] {self.served} refuses logprobs ({e.message}); "
-                      f"estimating from {self.samples} samples per reading", file=sys.stderr)
+                if self.exact is not False:
+                    print(f"[remote] {self.served} refuses logprobs ({e.message}); "
+                          f"estimating from {self.samples} samples per reading, "
+                          f"retrying the exact path every {RETRY_EXACT_SECONDS} s", file=sys.stderr)
                 self.exact = False
+                self._retry_exact_at = time.monotonic() + RETRY_EXACT_SECONDS
         return self._sampled(prompt, tids), len(ids)
 
 

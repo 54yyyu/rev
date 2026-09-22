@@ -261,7 +261,7 @@ answers below it, the ones a person sees, are more often right.
 ## Install
 
 ```bash
-uv venv && uv pip install -e .
+uv venv && uv pip install -e ".[mlx]"                # MLX is an extra: Apple Silicon only
 rev serve                                            # the local endpoint
 rev score --input decisions.jsonl --output answers.jsonl
 ```
@@ -269,7 +269,7 @@ rev score --input decisions.jsonl --output answers.jsonl
 Measuring it:
 
 ```bash
-uv pip install -e ".[bench]"
+uv pip install -e ".[mlx,bench]"
 python bench/usecases.py                  # clipboard, write-action gate, this Mac's calendar
 python bench/usecases.py mail --dump      # then label bench/private/mail_labels.json, then:
 python bench/usecases.py mail
