@@ -100,44 +100,49 @@ from differs.
 
 Two ways to read them. With `return_logprob` the server hands back the
 log-probability of each answer letter at the answer position, the same number
-the MLX engine reads. The fleet endpoint runs DSpark speculative decoding, and
-this sglang build refuses `return_logprob` under it, so the engine falls back to
-drawing `--samples` single-token samples at temperature 1 and counting the
-letters. It tries the exact path first and switches on its own if the server
-ever allows it.
+the MLX engine reads. That is what the fleet endpoint does now: its image
+refused `return_logprob` under DSpark speculative decoding, and
+`fleet/patches/sglang-qwen38/` teaches it to answer. Against a server that
+still refuses, the engine draws `--samples` single-token samples at
+temperature 1 and counts the letters, retrying the exact path every five
+minutes.
 
-JevBench public items, `qwen38-27b` (27B, INT4 AWQ, 2x L40S) read this way,
-2026-09-21, 64 samples per reading:
+JevBench public items, `qwen38-27b` (27B, INT4 AWQ, 2x L40S) read exactly,
+2026-09-22:
 
 | | easy (48) | standard (72) | hard (111) |
 |---|---:|---:|---:|
 | rev, Qwen3.5-2B on this laptop | 1.000 | 0.764 | 0.550 |
-| **rev, qwen38-27b via fleet, 64 samples** | **1.000** | **0.972** | **0.757** |
+| rev, qwen38-27b via fleet, 32 samples (before the patch) | 1.000 | 0.986 | 0.784 |
+| **rev, qwen38-27b via fleet, exact** | **1.000** | **0.986** | **0.784** |
 | Jev 1.13.0 (commercial) | 1.000 | 0.986 | 0.730 |
 
-Hard is above Jev; `temporal_numeric` is still the weak family (0.400, Jev
-0.267). At the 0.9 gate, standard answers 74% of items at 1.000 and hard 35% at
-1.000.
+Standard equals Jev and hard is above it; `temporal_numeric` is still the weak
+family (0.400, Jev 0.267). At the 0.9 gate, standard answers 78% of items at
+1.000 and hard 35% at 1.000, and the confidences are the model's own rather
+than a sample fraction.
 
-The price is latency and load. Same client and items as the table above, the
-laptop talking to the cluster through the tunnel:
+Speed, same client and items, the laptop talking to `rev serve` on the relay
+host over the tailnet, which talks to the cluster:
 
-| request | via fleet, 64 samples p50 / p95 | rev local p50 / p95 | Jev p50 / p95 |
+| request | via fleet, exact p50 / p95 | rev local 2B p50 / p95 | Jev p50 / p95 |
 |---|---:|---:|---:|
-| short: clipboard paste | 1189 / 1318 ms | **266 / 473 ms** | 354 / 423 ms |
-| medium: JevBench standard | 1085 / 2048 ms | **240 / 423 ms** | 356 / 396 ms |
-| long: JevBench hard | 2037 / 3420 ms | 821 / 3666 ms | **326 / 437 ms** |
-| long, three questions | 4984 / 6463 ms | 1280 / 3862 ms | **328 / 388 ms** |
-| 8 requests in flight | 0.2-0.7 per s | 0.7-3.9 per s | **21-24 per s** |
+| short: clipboard paste | **145 / 153 ms** | 266 / 473 ms | 354 / 423 ms |
+| medium: JevBench standard | **138 / 251 ms** | 240 / 423 ms | 356 / 396 ms |
+| long: JevBench hard | 317 / 959 ms | 821 / 3666 ms | **326 / 437 ms** |
+| long, three questions | 725 / 1741 ms | 1280 / 3862 ms | **328 / 388 ms** |
+| 8 requests in flight | 18 / 19 / 3.0 / 1.8 per s | 0.7-3.9 per s | **21-24 per s** |
 
-The round trip is not the cost: a single greedy token from the same prompt comes
-back in 90 ms. Sixty-four samples are sixty-four sequences, each holding a
-recurrent-state slot and a drafter step on the server, and eight requests in
-flight are five hundred. The default is now **32 samples**: same accuracy as 64
-on standard and hard (0.986 / 0.784), 60% of the time, and half the load on the
-endpoint; 16 lost three hard points (`DECISIONS.md`). Exact log-probabilities
-would cost one sequence per reading, and need the endpoint to run without
-DSpark.
+Faster than the laptop and than Jev on short and medium questions; level with
+Jev on a long document's median and behind at p95 and under concurrency, where
+two L40S reading 1-4k tokens are the limit. Before the patch, with 64 samples
+per reading, the same rows were 1189 / 1085 / 2037 / 4984 ms at p50 and 0.2-0.7
+per second in flight (`bench/results/speed-remote-64.json`).
+
+The endpoint keeps serving coding agents at the same time: their decode speed
+with thinking on was the same before and after the patch (code 131-145 tok/s,
+prose 95-108 tok/s on 600-token answers), and rev's one-token requests share
+the batch with them.
 
 ## Why it exists
 

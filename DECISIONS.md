@@ -50,10 +50,34 @@ gate, where selective accuracy was 1.000 in every cell / wall time):
 on the server; 16 drops three hard points and halves the coverage. **32 is the
 default.** The speed table in the README was taken at 64, before the sweep.
 
-Not done, and why: serving without DSpark would give exact log-probabilities
-at one sequence per reading, and cost the agents roughly half their decode
-speed (`clusters/orcd.sh` in fleet has the numbers). That is the endpoint
-owner's call, and the engine needs no change when it is made.
+## The endpoint answers logprobs after all — 2026-09-22
+
+Rather than give up DSpark, fleet patches the image
+(`fleet/patches/sglang-qwen38/`, bound over the source at container start):
+the scheduler's rejection is removed, prefill already computed logprobs through
+the target worker's sampler, and decode gathers them from the verify logits the
+way DFlash does. A third file fixes a stock sglang crash that only became
+reachable then: a prefill batch mixing a logprob request with a non-logprob one
+holds an empty list where a tensor is expected, and `.tolist()` on it killed
+the scheduler the first time a rev request landed next to an agent's.
+
+Exact reading, same items: easy 1.000, standard 0.986, hard 0.784 -- the same
+accuracies the 32-sample estimate gave, which says the estimate was adequate
+for the *choice*. What changed is everything else:
+
+| | 64 samples | exact |
+|---|---:|---:|
+| short question p50 | 1189 ms | **145 ms** |
+| long document p50 | 2037 ms | **317 ms** |
+| 8 in flight, short | 0.64 /s | **18 /s** |
+| confidence | sample fraction, ±0.06 | the model's own |
+| server cost per reading | 64 sequences | 1 |
+
+One greedy token from the same prompt costs 90 ms on the server, so a short
+question is now round trips plus a forward pass. The agents sharing the
+endpoint measured the same decode speed before and after. The sampled path
+stays as the fallback for any server that still refuses, re-tested every five
+minutes because the endpoint behind the URL is replaced every six hours.
 
 ## 8-bit is the default, not 4-bit — 2026-09-21
 
