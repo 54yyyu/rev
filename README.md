@@ -133,7 +133,10 @@ host over the tailnet, which talks to the cluster:
 | medium: JevBench standard | **138 / 251 ms** | 240 / 423 ms | 356 / 396 ms |
 | long: JevBench hard | 317 / 959 ms | 821 / 3666 ms | **326 / 437 ms** |
 | long, three questions | 725 / 1741 ms | 1280 / 3862 ms | **328 / 388 ms** |
-| 8 requests in flight | 18 / 19 / 3.0 / 1.8 per s | 0.7-3.9 per s | **21-24 per s** |
+| 8 in flight, short | 18.3 per s | 2.9 per s | **21.3 per s** |
+| 8 in flight, medium | 18.8 per s | 3.9 per s | **21.3 per s** |
+| 8 in flight, long | 3.0 per s | 0.7 per s | **23.7 per s** |
+| 8 in flight, long, three questions | 1.8 per s | 0.6 per s | **22.0 per s** |
 
 Faster than the laptop and than Jev on short and medium questions; level with
 Jev on a long document's median and behind at p95 and under concurrency, where
