@@ -3,6 +3,7 @@ name = "rev"
 version = "0.2.0"
 description = "Typed decisions from a frozen open model, one forward pass, on Apple Silicon"
 requires-python = ">=3.10"
+license = "MIT"
 # The base install is enough for `rev serve --upstream URL` and `Client` on any
 # machine (the relay host is an aarch64 Linux box with no GPU). The in-process
 # engine needs MLX, which only exists on Apple Silicon: `.[mlx]`.
