@@ -126,6 +126,14 @@ disk). Jev itself takes no images, and neither does the MLX engine; it answers
 400. On a 27B served model, a 1280x800 screenshot (~1.1k tokens) is read in
 about 0.5 s.
 
+**Answers other than letters.** `Remote.read_tokens(state, question, answers)`
+reads the probability of any single tokens you name - digits on a scale,
+"left" and "right" - with a plain prompt instead of lettered options, and
+`Remote.generate` returns a short answer that takes several tokens.
+[revdrive](https://github.com/54yyyu/revdrive) drives a simulated car through a
+cone course with it: ten left-or-right questions about the camera view, about
+once a second, and a controller that drives where they say the course goes.
+
 Two ways to read them. With `return_logprob` the server hands back the
 log-probability of each answer letter at the answer position, the same number
 the MLX engine reads. Some speculative decoders refuse `return_logprob`

@@ -101,3 +101,17 @@ def render(tokenizer, state: Any, criterion: str, labelled: list[tuple[str, str]
         enable_thinking=False,
         **extra,
     )
+
+
+def render_free(tokenizer, state: Any, question: str, system: str, images: int = 0) -> str:
+    """Chat template up to the first token of a free answer, for reading a
+    distribution over answer tokens the caller names (digits on a scale, say)
+    rather than option letters. Thinking is off for the same reason as in
+    `render`. The state and the question go in as plain text, images first."""
+    body = state if isinstance(state, str) else json.dumps(state, ensure_ascii=False)
+    text = f"{body}\n\n{question}"
+    user: Any = [{"type": "image"}] * images + [{"type": "text", "text": text}] if images else text
+    extra = {"add_vision_id": True} if images else {}
+    return tokenizer.apply_chat_template(
+        [{"role": "system", "content": system}, {"role": "user", "content": user}],
+        tokenize=False, add_generation_prompt=True, enable_thinking=False, **extra)

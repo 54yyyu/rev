@@ -48,7 +48,7 @@ import numpy as np
 
 from .base import Decider
 from .labels import check_boundary
-from .prompt import render, split_images
+from .prompt import render, render_free, split_images
 
 # The tokenizer of the model we serve. Only tokenizer and template
 # files are fetched; the weights are never touched.
@@ -204,6 +204,55 @@ class Remote(Decider):
                 self._retry_exact_at = time.monotonic() + RETRY_EXACT_SECONDS
         z, served = self._sampled(prompt, tids, media)
         return z, served or len(ids)
+
+
+    def read_tokens(self, state: Any, question: str, answers: list[str],
+                    system: str = "Answer with a single token and nothing else.") -> tuple[dict[str, float], float]:
+        """The model's next-token distribution over `answers`, each one token.
+
+        For answers that are not option letters: a digit on a scale, a word.
+        Returns (probabilities renormalised over `answers`, the share of the
+        model's whole next-token probability that fell on them); a low share
+        means it wanted to say something else. Exact when the server returns
+        log-probabilities, estimated from samples otherwise.
+        """
+        state, images = split_images(state)
+        prompt = render_free(self.tokenizer, state, question, system, len(images))
+        media = {"image_data": images} if images else {}
+        ids = self.tokenizer.encode(prompt, add_special_tokens=False)
+        tids = []
+        for a in answers:
+            extended = self.tokenizer.encode(prompt + a, add_special_tokens=False)
+            if extended[:-1] != ids or len(extended) != len(ids) + 1:
+                raise ValueError(f"answer {a!r} is not one token after this prompt")
+            tids.append(extended[-1])
+        if len(set(tids)) != len(tids):
+            raise ValueError("answers share a token")
+        z = None
+        if self.exact is not False or time.monotonic() >= self._retry_exact_at:
+            try:
+                z, _ = self._logprobs(prompt, tids, media)
+                self.exact = True
+            except RemoteError as e:
+                if e.code != 400 or "logprob" not in e.message.lower():
+                    raise
+                self.exact = False
+                self._retry_exact_at = time.monotonic() + RETRY_EXACT_SECONDS
+        if z is None:
+            z, _ = self._sampled(prompt, tids, media)
+        mass = float(np.exp(z).sum())
+        p = np.exp(z - z.max()); p /= p.sum()
+        return dict(zip(answers, p.tolist())), mass
+
+    def generate(self, state: Any, question: str, max_new_tokens: int = 24,
+                 system: str = "You are a helpful assistant.") -> str:
+        """A short greedy answer, for formats that take several tokens (coordinates)."""
+        state, images = split_images(state)
+        prompt = render_free(self.tokenizer, state, question, system, len(images))
+        media = {"image_data": images} if images else {}
+        out = self._post({"text": prompt, **media,
+                          "sampling_params": {"max_new_tokens": max_new_tokens, "temperature": 0}})
+        return out["text"] if isinstance(out, dict) else out[0]["text"]
 
 
 def add_engine_args(p) -> None:

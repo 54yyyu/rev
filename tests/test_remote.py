@@ -48,6 +48,17 @@ for want, rgb in (("red", (220, 20, 20)), ("green", (20, 170, 40)), ("blue", (20
     if di.choice != want:
         print(f"  FAIL: image read as {di.choice}"); fail += 1
 
+# Answers other than option letters: the probability of named tokens, read directly.
+img = [{"type": "text", "text": "A photo of a wall."}, {"type": "image_url", "image_url": {"url": png((220, 20, 20))}}]
+pr, mass = h.read_tokens(img, "What colour is the wall? Answer red or blue.", ["red", "blue"], "Answer with one word.")
+print(f"read_tokens: P(red) {pr['red']:.3f}, share of the next token on the answers {mass:.3f}")
+if pr["red"] < 0.9 or abs(sum(pr.values()) - 1) > 1e-6:
+    print("  FAIL: read_tokens"); fail += 1
+try:
+    h.read_tokens("x", "q?", ["red wall", "blue"]); print("  FAIL: a two-token answer was accepted"); fail += 1
+except ValueError:
+    pass
+
 # Thinking is off for this request only: the rendered prompt ends in an empty
 # reasoning block, and the server's own default is not touched.
 from rev.prompt import render

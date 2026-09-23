@@ -3,6 +3,21 @@
 Why this is the way it is. Each entry is something that was measured, not
 argued; the numbers are on JevBench public items with Qwen3.5-2B unless stated.
 
+## Answers other than option letters — 2026-09-23
+
+`Remote.read_tokens(state, question, answers)` reads the next-token
+probability of any single tokens the caller names, with a plain prompt (the
+state and the question, thinking off) instead of the lettered options;
+`Remote.generate` returns a short greedy answer for formats that take several
+tokens. Built for [revdrive](https://github.com/54yyyu/revdrive), where a car is
+driven from a camera: asked to pick among seven or eleven lettered options
+(steering levels, marks painted on the ground), the served 27B answered the
+first letter whenever unsure - lettered marks were 14% exact - while two words
+read directly ("left" / "right", one view at a time, each with its mirror image)
+kept what it sees: 3.9 deg of error on the course's direction. The measurements
+are in revdrive's DECISIONS.md. `tests/test_remote.py` checks it against a live
+server; each answer must be one token after the prompt, or it raises.
+
 ## Images through the remote engine — 2026-09-22
 
 The coding agents send images to the same served model through chat
